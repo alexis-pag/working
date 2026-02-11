@@ -2,168 +2,324 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fiche Flash : Contrats & Organisation du Travail</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f4f8;
-    margin: 20px;
-    line-height: 1.5;
-    color: #000000; /* Texte en noir */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 30px 20px;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
   h1 {
     text-align: center;
-    background-color: #1976D2;
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
     color: white;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 25px;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 35px;
+    font-size: 2em;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: slideDown 0.5s ease-out;
   }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .section {
-    margin-bottom: 25px;
+    margin-bottom: 35px;
+    animation: fadeIn 0.6s ease-out forwards;
+    opacity: 0;
   }
+
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.2s; }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
   .section-title {
-    background-color: #64B5F6;
-    color: #000000; /* Texte noir */
-    padding: 6px 12px;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
     font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(66, 165, 245, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
+
   .card {
-    background-color: white;
-    border-left: 6px solid #1976D2;
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
     display: flex;
     align-items: flex-start;
-    color: #000000; /* Texte noir */
+    gap: 15px;
+    color: #333;
+    transition: all 0.3s ease;
+    border-left: 6px solid transparent;
   }
+
+  .card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+
+  .card:nth-child(odd) {
+    border-left-color: #1976D2;
+  }
+
+  .card:nth-child(even) {
+    border-left-color: #FF6B6B;
+  }
+
   .icon {
-    font-size: 28px;
-    margin-right: 12px;
+    font-size: 36px;
+    flex-shrink: 0;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
   }
+
   .card-content {
     flex: 1;
   }
+
+  .card-content strong {
+    color: #1976D2;
+    font-size: 1.1em;
+    display: block;
+    margin-bottom: 8px;
+  }
+
   .highlight {
-    background-color: #FFF176;
+    background: linear-gradient(120deg, #FFF176 0%, #FFE082 100%);
     font-weight: bold;
-    color: #000000; /* Texte noir même sur surlignage */
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(255, 241, 118, 0.4);
   }
+
   .note {
-    background-color: #E3F2FD;
-    border-left: 5px solid #42A5F5;
-    padding: 10px;
-    border-radius: 6px;
-    margin-top: 15px;
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+    border-left: 6px solid #42A5F5;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 25px;
     font-weight: bold;
-    color: #000000; /* Texte noir */
+    color: #000;
+    box-shadow: 0 5px 15px rgba(66, 165, 245, 0.3);
+    position: relative;
+    overflow: hidden;
   }
+
+  .note::before {
+    content: "💡";
+    font-size: 60px;
+    position: absolute;
+    right: 20px;
+    bottom: -10px;
+    opacity: 0.2;
+  }
+
   ul {
-    margin: 6px 0 0 20px;
+    margin: 10px 0 0 25px;
     padding: 0;
   }
+
   li {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 5px;
+  }
+
+  li::before {
+    content: "▸";
+    color: #1976D2;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+
+  /* Badge pour les types de contrats */
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-left: 8px;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+  }
+
+  .badge.stable {
+    background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+  }
+
+  .badge.temp {
+    background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.5em;
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 1.1em;
+      padding: 12px 15px;
+    }
+
+    .card {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .icon {
+      font-size: 28px;
+    }
   }
 </style>
 </head>
 <body>
 
-<h1>Fiche Flash : Contrats & Organisation du Travail</h1>
+<div class="container">
+  <h1>📚 Fiche Flash : Contrats & Organisation du Travail</h1>
 
-<div class="section">
-  <div class="section-title">1️⃣ Contrats de travail</div>
+  <div class="section">
+    <div class="section-title">
+      1️⃣ Contrats de travail
+    </div>
 
-  <div class="card">
-    <div class="icon">📄</div>
-    <div class="card-content">
-      <strong>Définition :</strong> Un <span class="highlight">contrat de travail</span> est un <strong>accord</strong> par lequel une personne travaille pour un employeur sous son autorité, contre une rémunération.
+    <div class="card">
+      <div class="icon">📄</div>
+      <div class="card-content">
+        <strong>Définition</strong>
+        Un <span class="highlight">contrat de travail</span> est un <strong>accord</strong> par lequel une personne travaille pour un employeur sous son autorité, contre une rémunération.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon">⏳</div>
+      <div class="card-content">
+        <strong>CDD (Contrat à Durée Déterminée) <span class="badge temp">Temporaire</span></strong>
+        <ul>
+          <li>Durée limitée</li>
+          <li>Pour une fin précise ou motif précis (remplacement, surcroît d'activité)</li>
+          <li>Exemple : 6 mois pour remplacer un salarié absent</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🔒</div>
+      <div class="card-content">
+        <strong>CDI (Contrat à Durée Indéterminée) <span class="badge stable">Stable</span></strong>
+        <ul>
+          <li>Sans limite de durée</li>
+          <li>Forme la plus stable d'emploi</li>
+          <li>Exemple : emploi permanent dans l'entreprise</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🤝</div>
+      <div class="card-content">
+        <strong>CTT / Intérim <span class="badge temp">Temporaire</span></strong>
+        <ul>
+          <li>Contrat via agence d'intérim</li>
+          <li>L'agence met le salarié à disposition d'une entreprise</li>
+          <li>Durée limitée selon mission</li>
+        </ul>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="icon">⏳</div>
-    <div class="card-content">
-      <strong>CDD (Contrat à Durée Déterminée)</strong>
-      <ul>
-        <li>Durée limitée</li>
-        <li>Pour une fin précise ou motif précis (remplacement, surcroît d’activité)</li>
-        <li>Exemple : 6 mois pour remplacer un salarié absent</li>
-      </ul>
+  <div class="section">
+    <div class="section-title">
+      2️⃣ Organisation du travail
     </div>
-  </div>
 
-  <div class="card">
-    <div class="icon">🔒</div>
-    <div class="card-content">
-      <strong>CDI (Contrat à Durée Indéterminée)</strong>
-      <ul>
-        <li>Sans limite de durée</li>
-        <li>Forme la plus stable d’emploi</li>
-        <li>Exemple : emploi permanent dans l’entreprise</li>
-      </ul>
+    <div class="card">
+      <div class="icon">⏱️</div>
+      <div class="card-content">
+        <strong>Temps de travail</strong>
+        Période pendant laquelle le salarié travaille pour l'entreprise. Respecter les consignes de l'employeur.
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="icon">🤝</div>
-    <div class="card-content">
-      <strong>CTT / Intérim</strong>
-      <ul>
-        <li>Contrat via agence d’intérim</li>
-        <li>L’agence met le salarié à disposition d’une entreprise</li>
-        <li>Durée limitée selon mission</li>
-      </ul>
+    <div class="card">
+      <div class="icon">☕</div>
+      <div class="card-content">
+        <strong>Pause</strong>
+        Moment pour <span class="highlight">se reposer, boire ou manger</span> pendant la journée.
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="section">
-  <div class="section-title">2️⃣ Organisation du travail</div>
-
-  <div class="card">
-    <div class="icon">⏱️</div>
-    <div class="card-content">
-      <strong>Temps de travail :</strong> Période pendant laquelle le salarié travaille pour l’entreprise. Respecter les consignes de l’employeur.
+    <div class="card">
+      <div class="icon">🏖️</div>
+      <div class="card-content">
+        <strong>Congé</strong>
+        Période plus longue sans travail, le contrat reste actif et le salarié conserve sa rémunération.
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="icon">☕</div>
-    <div class="card-content">
-      <strong>Pause :</strong> Moment pour <span class="highlight">se reposer, boire ou manger</span> pendant la journée.
+    <div class="card">
+      <div class="icon">🛌</div>
+      <div class="card-content">
+        <strong>Repos</strong>
+        Temps sans travail entre deux journées ou semaines (quotidien ou hebdomadaire).
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="icon">🏖️</div>
-    <div class="card-content">
-      <strong>Congé :</strong> Période plus longue sans travail, le contrat reste actif et le salarié conserve sa rémunération.
+    <div class="card">
+      <div class="icon">➕</div>
+      <div class="card-content">
+        <strong>Heure supplémentaire</strong>
+        Travail au-delà de la durée légale, généralement mieux rémunéré.
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="icon">🛌</div>
-    <div class="card-content">
-      <strong>Repos :</strong> Temps sans travail entre deux journées ou semaines (quotidien ou hebdomadaire).
+    <div class="note">
+      <strong style="font-size: 1.2em; display: block; margin-bottom: 10px;">💡 Astuce pour retenir :</strong>
+      <div style="margin-left: 20px;">
+        • <strong>Contrats</strong> → penser <span class="highlight">durée + stabilité + employeur</span><br><br>
+        • <strong>Organisation du travail</strong> → penser <span class="highlight">temps + pauses + congés + repos + heures sup</span>
+      </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="icon">➕</div>
-    <div class="card-content">
-      <strong>Heure supplémentaire :</strong> Travail au-delà de la durée légale, généralement mieux rémunéré.
-    </div>
-  </div>
-
-  <div class="note">
-    Astuce : <br>
-    - <strong>Contrats</strong> → penser <span class="highlight">durée + stabilité + employeur</span><br>
-    - <strong>Organisation du travail</strong> → penser <span class="highlight">temps + pauses + congés + repos + heures sup</span>
   </div>
 </div>
 
