@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physique Interactive – Lumière & Éclairement</title>
+
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary: #8b5cf6;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --shadow: 0 10px 30px rgba(0,0,0,0.1);
+    --shadow-hover: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+.hero {
+    background: var(--bg-gradient);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero p {
+    font-size: 1.2em;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.progress-bar {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+.progress-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.progress-track {
+    background: #e2e8f0;
+    height: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.section {
+    background: var(--card);
+    padding: 35px;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-5px);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.section-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.section h2 {
+    color: var(--primary);
+    font-size: 1.8em;
+    flex: 1;
+}
+
+.toggle-icon {
+    font-size: 24px;
+    color: var(--primary);
+    transition: transform 0.3s;
+}
+
+.section-content {
+    max-height: 2000px;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.3s;
+}
+
+.section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.formule {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    padding: 20px;
+    border-left: 5px solid var(--secondary);
+    border-radius: 10px;
+    font-family: 'Courier New', monospace;
+    margin: 20px 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+    transition: transform 0.3s;
+}
+
+.formule:hover {
+    transform: scale(1.02);
+}
+
+.info-card {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 15px 0;
+    border-left: 5px solid var(--primary);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.conseil {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border-left: 5px solid var(--warning);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.conseil::before {
+    content: '💡 ';
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.conseil strong {
+    color: #92400e;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+th {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    background: white;
+}
+
+tr:hover td {
+    background: #f8fafc;
+}
+
+.spectrum-bar {
+    height: 60px;
+    background: linear-gradient(to right, 
+        #8b00ff 0%, 
+        #0000ff 15%, 
+        #00ff00 35%, 
+        #ffff00 50%, 
+        #ff7f00 65%, 
+        #ff0000 85%, 
+        #8b0000 100%);
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.spectrum-label {
+    position: absolute;
+    top: -25px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.exercice {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px 0;
+    border: 2px solid var(--success);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+}
+
+.exercice h3 {
+    color: var(--success);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.exercice h3::before {
+    content: '✏️';
+    margin-right: 10px;
+    font-size: 1.3em;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+input[type="number"] {
+    padding: 12px 15px;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 16px;
+    width: 150px;
+    transition: all 0.3s;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+}
+
+.btn-hint {
+    background: linear-gradient(135deg, var(--warning), #d97706);
+    color: white;
+}
+
+.resultat {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: none;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.resultat.ok {
+    background: #d1fae5;
+    color: #065f46;
+    border-left: 5px solid var(--success);
+    display: block;
+}
+
+.resultat.ko {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 5px solid var(--danger);
+    display: block;
+}
+
+.hint {
+    background: #fffbeb;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+    border-left: 5px solid var(--warning);
+    display: none;
+}
+
+.hint.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.score-board {
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 30px;
+    box-shadow: var(--shadow);
+}
+
+.score-value {
+    font-size: 3em;
+    font-weight: bold;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.quiz-option {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.quiz-option:hover {
+    border-color: var(--primary);
+    background: #f8fafc;
+    transform: translateX(5px);
+}
+
+.quiz-option input[type="radio"] {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.badges {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.interactive-demo {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.slider-container {
+    margin: 20px 0;
+}
+
+.slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #e2e8f0;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.demo-output {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2em;
+    }
+    
+    .section {
+        padding: 20px;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    input[type="number"] {
+        width: 100%;
+    }
+}
+
+.celebration {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none;
+    text-align: center;
+    animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>🌈 La Lumière & l'Éclairement</h1>
+    <p>Un cours de physique interactif et captivant</p>
+</div>
+
+<div class="container">
+    <div class="progress-bar">
+        <div class="progress-title">📊 Progression du cours</div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div style="margin-top: 10px; text-align: right;">
+            <span id="progressText">0%</span>
+        </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section" style="animation-delay: 0.1s">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">🔆</div>
+            <h2>I. Nature de la lumière</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+            <p style="font-size: 1.1em; margin-bottom: 20px;">
+                La lumière est une <b>onde électromagnétique</b> qui se propage dans le vide
+                à une vitesse extraordinaire !
+            </p>
+
+            <div class="formule">c = 3,00 × 10⁸ m·s⁻¹</div>
+
+            <div class="conseil">
+                <strong>Le saviez-vous ?</strong> La lumière peut faire 7,5 fois le tour de la Terre en une seule seconde !
+            </div>
+
+            <div class="info-card">
+                <h4>✨ Caractéristiques importantes</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Ne nécessite aucun support matériel</li>
+                    <li>Se propage dans le vide</li>
+                    <li>Vitesse constante dans le vide</li>
+                </ul>
+            </div>
+
+            <h3 style="color: var(--primary); margin-top: 30px;">📡 Radiations visibles et invisibles</h3>
+            
+            <div class="spectrum-bar">
+                <div class="spectrum-label" style="left: 0;">UV</div>
+                <div class="spectrum-label" style="left: 50%; transform: translateX(-50%);">VISIBLE</div>
+                <div class="spectrum-label" style="right: 0;">IR</div>
+            </div>
+
+            <div class="badges">
+                <div class="badge badge-info">👁️ Visible : 400 - 800 nm</div>
+                <div class="badge badge-warning">☀️ UV : λ < 400 nm</div>
+                <div class="badge badge-success">🔥 IR : λ > 800 nm</div>
+            </div>
+
+            <button class="btn btn-primary" onclick="markSectionComplete(0)" style="margin-top: 20px;">
+                ✓ J'ai compris cette section
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section" style="animation-delay: 0.2s">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">🌊</div>
+            <h2>II. Longueur d'onde et monochromaticité</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+            <div class="info-card">
+                <p style="font-size: 1.1em;">
+                    Une radiation est <b>monochromatique</b> lorsqu'elle ne possède
+                    qu'une seule longueur d'onde λ (lambda).
+                </p>
+            </div>
+
+            <div class="formule">λ = c / f</div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <p><b>Où :</b></p>
+                <p>λ = longueur d'onde (m)</p>
+                <p>c = vitesse de la lumière (m/s)</p>
+                <p>f = fréquence (Hz)</p>
+            </div>
+
+            <div class="conseil">
+                <strong>Astuce :</strong> La lumière blanche est <b>polychromatique</b> car elle contient toutes les couleurs du spectre visible !
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🎨 Démonstration interactive</h4>
+                <p>Faites varier la longueur d'onde pour voir la couleur :</p>
+                <div class="slider-container">
+                    <input type="range" min="400" max="800" value="550" class="slider" id="wavelengthSlider">
+                </div>
+                <div class="demo-output" id="wavelengthValue">550 nm</div>
+                <div id="colorBox" style="width: 100%; height: 80px; border-radius: 10px; margin-top: 20px; background: #00ff00;"></div>
+            </div>
+
+            <button class="btn btn-primary" onclick="markSectionComplete(1)" style="margin-top: 20px;">
+                ✓ J'ai compris cette section
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section" style="animation-delay: 0.3s">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">📊</div>
+            <h2>III. Spectre électromagnétique</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+            <table>
+                <tr>
+                    <th>Rayonnement</th>
+                    <th>Longueur d'onde</th>
+                    <th>Effets</th>
+                </tr>
+                <tr>
+                    <td><b>☀️ UV</b></td>
+                    <td>&lt; 400 nm</td>
+                    <td>Brûlures, vieillissement cellulaire</td>
+                </tr>
+                <tr>
+                    <td><b>👁️ Visible</b></td>
+                    <td>400 – 800 nm</td>
+                    <td>Vision</td>
+                </tr>
+                <tr>
+                    <td><b>🔥 IR</b></td>
+                    <td>&gt; 800 nm</td>
+                    <td>Chaleur</td>
+                </tr>
+            </table>
+
+            <div class="conseil">
+                <strong>Attention !</strong> Les UV sont dangereux pour les yeux et la peau. Toujours porter des lunettes de soleil en été !
+            </div>
+
+            <button class="btn btn-primary" onclick="markSectionComplete(2)" style="margin-top: 20px;">
+                ✓ J'ai compris cette section
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section" style="animation-delay: 0.4s">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">💡</div>
+            <h2>IV. Grandeurs photométriques</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+            <h3 style="color: var(--primary);">🌟 Flux lumineux (Φ)</h3>
+            <p style="margin: 15px 0;">Quantité de lumière émise par une source.</p>
+            <div class="formule">Φ = k × P</div>
+            
+            <div class="info-card">
+                <ul style="margin-left: 20px;">
+                    <li><b>Φ</b> en lumen (lm)</li>
+                    <li><b>P</b> en watt (W)</li>
+                    <li><b>k</b> : rendement lumineux (lm/W)</li>
+                </ul>
+            </div>
+
+            <h3 style="color: var(--primary); margin-top: 30px;">💡 Éclairement (E)</h3>
+            <p style="margin: 15px 0;">Lumière reçue par une surface.</p>
+            <div class="formule">E = Φ / S</div>
+
+            <h3 style="color: var(--primary); margin-top: 30px;">📏 Loi de la distance</h3>
+            <div class="formule">E = k × Φ / d²</div>
+
+            <div class="conseil">
+                <strong>Remarque :</strong> L'éclairement diminue avec le carré de la distance. Si vous doublez la distance, l'éclairement est divisé par 4 !
+            </div>
+
+            <div class="interactive-demo">
+                <h4>🎯 Simulateur d'éclairement</h4>
+                <p>Distance : <span id="distValue">5</span> m</p>
+                <input type="range" min="1" max="10" value="5" class="slider" id="distanceSlider">
+                <div class="demo-output" id="eclairementValue">640 lux</div>
+                <p style="font-size: 14px; color: #64748b;">(Avec Φ = 20000 lm, k = 0.8)</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="markSectionComplete(3)" style="margin-top: 20px;">
+                ✓ J'ai compris cette section
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 5 - Exercices -->
+    <div class="section" style="animation-delay: 0.5s">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">🎓</div>
+            <h2>V. Exercices interactifs</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+            
+            <!-- Exercice 1 -->
+            <div class="exercice">
+                <h3>Exercice 1 – Flux lumineux</h3>
+                <p style="margin: 15px 0;">Une lampe de puissance 150 W a un rendement de 100 lm/W. Calculez le flux lumineux.</p>
+                
+                <div class="input-group">
+                    <span>Φ = </span>
+                    <input id="ex1" type="number" placeholder="Votre réponse">
+                    <span>lm</span>
+                </div>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="corriger1()">✓ Vérifier</button>
+                    <button class="btn btn-hint" onclick="toggleHint('hint1')">💡 Indice</button>
+                </div>
+                
+                <div id="hint1" class="hint">
+                    <b>Indice :</b> Utilisez la formule Φ = k × P avec k = 100 lm/W et P = 150 W
+                </div>
+                
+                <div id="r1" class="resultat"></div>
+            </div>
+
+            <!-- Exercice 2 -->
+            <div class="exercice">
+                <h3>Exercice 2 – Éclairement</h3>
+                <p style="margin: 15px 0;">Un flux de 3000 lm est réparti uniformément sur une surface de 6 m². Calculez l'éclairement.</p>
+                
+                <div class="input-group">
+                    <span>E = </span>
+                    <input id="ex2" type="number" placeholder="Votre réponse">
+                    <span>lux</span>
+                </div>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="corriger2()">✓ Vérifier</button>
+                    <button class="btn btn-hint" onclick="toggleHint('hint2')">💡 Indice</button>
+                </div>
+                
+                <div id="hint2" class="hint">
+                    <b>Indice :</b> Utilisez la formule E = Φ / S avec Φ = 3000 lm et S = 6 m²
+                </div>
+                
+                <div id="r2" class="resultat"></div>
+            </div>
+
+            <!-- Exercice 3 -->
+            <div class="exercice">
+                <h3>Exercice 3 – Loi de la distance</h3>
+                <p style="margin: 15px 0;">Avec Φ = 20000 lm, k = 0,8 et distance = 5 m, calculez l'éclairement.</p>
+                
+                <div class="input-group">
+                    <span>E = </span>
+                    <input id="ex3" type="number" placeholder="Votre réponse">
+                    <span>lux</span>
+                </div>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="corriger3()">✓ Vérifier</button>
+                    <button class="btn btn-hint" onclick="toggleHint('hint3')">💡 Indice</button>
+                </div>
+                
+                <div id="hint3" class="hint">
+                    <b>Indice :</b> Utilisez la formule E = k × Φ / d². N'oubliez pas de mettre la distance au carré !
+                </div>
+                
+                <div id="r3" class="resultat"></div>
+            </div>
+
+            <!-- Exercice 4 - QCM -->
+            <div class="exercice">
+                <h3>Exercice 4 – QCM</h3>
+                <p style="margin: 15px 0;"><b>Quel rayonnement est le plus dangereux pour les yeux ?</b></p>
+                
+                <label class="quiz-option">
+                    <input type="radio" name="q4" value="faux">
+                    <span>Lumière visible</span>
+                </label>
+                
+                <label class="quiz-option">
+                    <input type="radio" name="q4" value="vrai">
+                    <span>Rayonnement UV (Ultraviolet)</span>
+                </label>
+                
+                <label class="quiz-option">
+                    <input type="radio" name="q4" value="faux">
+                    <span>Rayonnement IR (Infrarouge)</span>
+                </label>
+                
+                <button class="btn btn-success" onclick="corriger4()" style="margin-top: 15px;">✓ Vérifier</button>
+                
+                <div id="r4" class="resultat"></div>
+            </div>
+
+            <div class="score-board">
+                <div style="font-size: 1.5em; margin-bottom: 10px;">🏆 Votre score</div>
+                <div class="score-value" id="score">0 / 4</div>
+                <p style="margin-top: 15px; color: #64748b;">Continuez ! Vous progressez bien !</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="overlay" id="overlay" onclick="closeCelebration()"></div>
+<div class="celebration" id="celebration">
+    <div style="font-size: 5em;">🎉</div>
+    <h2 style="color: var(--primary); margin: 20px 0;">Félicitations !</h2>
+    <p style="font-size: 1.2em; margin-bottom: 20px;">Vous avez terminé tous les exercices avec succès !</p>
+    <button class="btn btn-primary" onclick="closeCelebration()">Continuer</button>
+</div>
+
+<script>
+let points = 0;
+let sectionsCompleted = [false, false, false, false];
+let exercicesChecked = [false, false, false, false];
+
+function updateProgress() {
+    const totalSections = sectionsCompleted.length;
+    const completed = sectionsCompleted.filter(s => s).length;
+    const percentage = (completed / totalSections) * 100;
+    
+    document.getElementById('progressFill').style.width = percentage + '%';
+    document.getElementById('progressText').textContent = Math.round(percentage) + '%';
+}
+
+function markSectionComplete(index) {
+    sectionsCompleted[index] = true;
+    updateProgress();
+    
+    event.target.textContent = '✓ Section complétée !';
+    event.target.style.background = 'linear-gradient(135deg, var(--success), #059669)';
+    event.target.disabled = true;
+}
+
+function toggleSection(header) {
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.toggle-icon');
+    
+    content.classList.toggle('collapsed');
+    icon.style.transform = content.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
+}
+
+function toggleHint(hintId) {
+    const hint = document.getElementById(hintId);
+    hint.classList.toggle('show');
+}
+
+function majScore() {
+    document.getElementById("score").textContent = points + " / 4";
+    
+    if (points === 4 && exercicesChecked.every(e => e)) {
+        setTimeout(() => {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('celebration').style.display = 'block';
+        }, 500);
+    }
+}
+
+function corriger1() {
+    if (exercicesChecked[0]) return;
+    exercicesChecked[0] = true;
+    
+    const v = Number(document.getElementById('ex1').value);
+    const resultat = document.getElementById('r1');
+    
+    if (v === 15000) {
+        resultat.textContent = "🎉 Excellent ! Φ = 100 × 150 = 15 000 lm";
+        resultat.className = "resultat ok";
+        points++;
+    } else {
+        resultat.textContent = "❌ Incorrect. La bonne réponse est 15 000 lm (Φ = k × P = 100 × 150)";
+        resultat.className = "resultat ko";
+    }
+    majScore();
+}
+
+function corriger2() {
+    if (exercicesChecked[1]) return;
+    exercicesChecked[1] = true;
+    
+    const v = Number(document.getElementById('ex2').value);
+    const resultat = document.getElementById('r2');
+    
+    if (v === 500) {
+        resultat.textContent = "🎉 Parfait ! E = 3000 / 6 = 500 lux";
+        resultat.className = "resultat ok";
+        points++;
+    } else {
+        resultat.textContent = "❌ Incorrect. La bonne réponse est 500 lux (E = Φ / S = 3000 / 6)";
+        resultat.className = "resultat ko";
+    }
+    majScore();
+}
+
+function corriger3() {
+    if (exercicesChecked[2]) return;
+    exercicesChecked[2] = true;
+    
+    const v = Number(document.getElementById('ex3').value);
+    const resultat = document.getElementById('r3');
+    
+    if (v === 640) {
+        resultat.textContent = "🎉 Bravo ! E = 0,8 × 20000 / 25 = 640 lux";
+        resultat.className = "resultat ok";
+        points++;
+    } else {
+        resultat.textContent = "❌ Incorrect. La bonne réponse est 640 lux (E = k × Φ / d² = 0,8 × 20000 / 5²)";
+        resultat.className = "resultat ko";
+    }
+    majScore();
+}
+
+function corriger4() {
+    if (exercicesChecked[3]) return;
+    exercicesChecked[3] = true;
+    
+    const radios = document.getElementsByName("q4");
+    let rep = "";
+    for (let r of radios) {
+        if (r.checked) rep = r.value;
+    }
+    
+    const resultat = document.getElementById('r4');
+    
+    if (rep === "vrai") {
+        resultat.textContent = "🎉 Correct ! Les UV sont effectivement dangereux pour les yeux et peuvent causer des dommages à la rétine.";
+        resultat.className = "resultat ok";
+        points++;
+    } else {
+        resultat.textContent = "❌ Incorrect. Les rayonnements UV sont les plus dangereux pour les yeux.";
+        resultat.className = "resultat ko";
+    }
+    majScore();
+}
+
+function closeCelebration() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('celebration').style.display = 'none';
+}
+
+// Wavelength slider interactivity
+document.getElementById('wavelengthSlider').addEventListener('input', function() {
+    const wavelength = this.value;
+    document.getElementById('wavelengthValue').textContent = wavelength + ' nm';
+    
+    // Convert wavelength to RGB
+    const rgb = wavelengthToRGB(wavelength);
+    document.getElementById('colorBox').style.background = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+});
+
+function wavelengthToRGB(wavelength) {
+    let r, g, b;
+    
+    if (wavelength >= 380 && wavelength < 440) {
+        r = -(wavelength - 440) / (440 - 380);
+        g = 0;
+        b = 1;
+    } else if (wavelength >= 440 && wavelength < 490) {
+        r = 0;
+        g = (wavelength - 440) / (490 - 440);
+        b = 1;
+    } else if (wavelength >= 490 && wavelength < 510) {
+        r = 0;
+        g = 1;
+        b = -(wavelength - 510) / (510 - 490);
+    } else if (wavelength >= 510 && wavelength < 580) {
+        r = (wavelength - 510) / (580 - 510);
+        g = 1;
+        b = 0;
+    } else if (wavelength >= 580 && wavelength < 645) {
+        r = 1;
+        g = -(wavelength - 645) / (645 - 580);
+        b = 0;
+    } else if (wavelength >= 645 && wavelength <= 800) {
+        r = 1;
+        g = 0;
+        b = 0;
+    } else {
+        r = 0;
+        g = 0;
+        b = 0;
+    }
+    
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+
+// Distance slider for éclairement
+document.getElementById('distanceSlider').addEventListener('input', function() {
+    const distance = this.value;
+    document.getElementById('distValue').textContent = distance;
+    
+    const phi = 20000;
+    const k = 0.8;
+    const eclairement = (k * phi) / (distance * distance);
+    
+    document.getElementById('eclairementValue').textContent = Math.round(eclairement) + ' lux';
+});
+
+// Initialize
+updateProgress();
+</script>
+
+</body>
+</html>
