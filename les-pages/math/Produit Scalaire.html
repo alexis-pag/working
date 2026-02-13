@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produit Scalaire — 1STI2D</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #181c27;
+    --bg3: #1e2335;
+    --card: #232840;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #e8eaf0;
+    --text2: #a0a8c0;
+    --border: #2e3455;
+    --glow: rgba(108,99,255,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(15,17,23,0.88);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 32px;
+  }
+  .logo {
+    font-size:1.1rem; font-weight:800; letter-spacing:.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .progress-bar {
+    flex:1; max-width:320px; margin:0 32px;
+    height:6px; background:var(--border); border-radius:99px; overflow:hidden;
+  }
+  .progress-fill {
+    height:100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius:99px; width:0%;
+    transition: width .4s ease;
+  }
+  .progress-label { font-size:.78rem; color:var(--text2); white-space:nowrap; }
+  .badge-level {
+    background: linear-gradient(135deg,#6c63ff22,#00d4aa22);
+    border:1px solid var(--accent);
+    color:var(--accent); border-radius:99px;
+    padding:4px 14px; font-size:.78rem; font-weight:700;
+  }
+
+  /* ── NAV SIDEBAR ── */
+  .sidebar {
+    position:fixed; left:0; top:64px; bottom:0; width:220px;
+    background:var(--bg2); border-right:1px solid var(--border);
+    padding:24px 0; overflow-y:auto; z-index:90;
+    transition: transform .3s ease;
+  }
+  .sidebar h3 {
+    font-size:.7rem; text-transform:uppercase; letter-spacing:2px;
+    color:var(--text2); padding:0 20px 12px;
+  }
+  .nav-item {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 20px; cursor:pointer;
+    color:var(--text2); font-size:.88rem;
+    border-left:3px solid transparent;
+    transition: all .2s;
+  }
+  .nav-item:hover { color:var(--text); background:var(--bg3); }
+  .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:var(--glow); }
+  .nav-icon { font-size:1rem; width:20px; text-align:center; }
+  .nav-done { margin-left:auto; font-size:.7rem; color:var(--accent2); }
+
+  /* ── MAIN ── */
+  main {
+    margin-left:220px; padding:100px 48px 80px;
+    max-width:calc(220px + 860px);
+  }
+  @media(max-width:860px){ main{margin-left:0;padding:80px 18px 60px;} .sidebar{transform:translateX(-100%);} }
+
+  /* ── HERO ── */
+  .hero {
+    text-align:center; padding:48px 0 56px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,.15) 0%, transparent 70%);
+    margin-bottom:48px; border-radius:var(--radius);
+  }
+  .hero-subtitle { font-size:.85rem; letter-spacing:3px; text-transform:uppercase;
+    color:var(--accent); margin-bottom:12px; }
+  .hero h1 { font-size:2.8rem; font-weight:900; line-height:1.15;
+    background:linear-gradient(135deg,#fff 30%,var(--accent2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { color:var(--text2); margin-top:14px; font-size:1.05rem; max-width:520px; margin-inline:auto; }
+  .hero-tags { display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .tag { background:var(--bg3); border:1px solid var(--border);
+    color:var(--text2); border-radius:99px; padding:5px 14px; font-size:.78rem; }
+
+  /* ── SECTIONS ── */
+  .chapter {
+    margin-bottom:56px; scroll-margin-top:84px;
+  }
+  .chapter-header {
+    display:flex; align-items:center; gap:16px; margin-bottom:28px;
+  }
+  .chapter-num {
+    width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; font-weight:900; flex-shrink:0;
+    background:linear-gradient(135deg,var(--accent),var(--accent)80);
+    box-shadow:0 4px 18px rgba(108,99,255,.3);
+  }
+  .chapter h2 { font-size:1.5rem; font-weight:800; }
+  .chapter h3 { font-size:1.1rem; font-weight:700; color:var(--accent2); margin:28px 0 14px; }
+
+  /* ── CARDS ── */
+  .card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:var(--radius); padding:24px 28px; margin-bottom:18px;
+  }
+  .card.def { border-left:4px solid var(--accent); }
+  .card.prop { border-left:4px solid var(--accent2); }
+  .card.warn { border-left:4px solid var(--accent3); }
+  .card.tip { border-left:4px solid var(--accent4); }
+  .card.example { border-left:4px solid #a78bfa; }
+
+  .card-label {
+    font-size:.7rem; letter-spacing:2px; text-transform:uppercase; font-weight:700;
+    margin-bottom:10px;
+  }
+  .card.def .card-label { color:var(--accent); }
+  .card.prop .card-label { color:var(--accent2); }
+  .card.warn .card-label { color:var(--accent3); }
+  .card.tip .card-label { color:var(--accent4); }
+  .card.example .card-label { color:#a78bfa; }
+
+  .card p, .card li { color:var(--text2); line-height:1.75; }
+  .card p + p { margin-top:10px; }
+
+  /* ── FORMULE BOX ── */
+  .formula-box {
+    background: linear-gradient(135deg, rgba(108,99,255,.08), rgba(0,212,170,.06));
+    border:1px solid rgba(108,99,255,.35);
+    border-radius:12px; padding:18px 24px; margin:14px 0;
+    text-align:center; font-size:1.05rem;
+  }
+
+  /* ── CONSEIL ACCORDÉON ── */
+  .conseil-toggle {
+    display:flex; align-items:center; gap:12px; cursor:pointer;
+    background:linear-gradient(135deg,rgba(255,209,102,.08),rgba(255,209,102,.02));
+    border:1px solid rgba(255,209,102,.3); border-radius:var(--radius-sm);
+    padding:14px 20px; margin:14px 0; user-select:none;
+    transition: background .2s;
+  }
+  .conseil-toggle:hover { background:rgba(255,209,102,.12); }
+  .conseil-icon { font-size:1.3rem; }
+  .conseil-title { font-weight:700; color:var(--accent4); flex:1; }
+  .conseil-arrow { color:var(--accent4); transition:transform .3s; font-size:1.1rem; }
+  .conseil-toggle.open .conseil-arrow { transform:rotate(180deg); }
+  .conseil-body {
+    display:none; background:rgba(255,209,102,.04);
+    border:1px solid rgba(255,209,102,.15); border-top:none;
+    border-radius:0 0 var(--radius-sm) var(--radius-sm);
+    padding:16px 20px; color:var(--text2); line-height:1.7;
+    margin-top:-14px; margin-bottom:14px;
+  }
+  .conseil-body.open { display:block; }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background:var(--bg3); border:1px solid var(--border);
+    border-radius:var(--radius); padding:28px; margin:28px 0;
+  }
+  .quiz-card h4 { font-size:1rem; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .quiz-card p { color:var(--text2); font-size:.9rem; margin-bottom:18px; }
+  .quiz-options { display:flex; flex-direction:column; gap:10px; }
+  .quiz-opt {
+    background:var(--card); border:2px solid var(--border);
+    border-radius:10px; padding:12px 18px; cursor:pointer;
+    color:var(--text2); font-size:.92rem;
+    transition: all .2s; display:flex; align-items:center; gap:12px;
+  }
+  .quiz-opt:hover:not(.disabled) { border-color:var(--accent); color:var(--text); background:var(--glow); }
+  .quiz-opt.correct { border-color:var(--accent2); background:rgba(0,212,170,.1); color:var(--accent2); }
+  .quiz-opt.wrong { border-color:var(--accent3); background:rgba(255,107,107,.1); color:var(--accent3); }
+  .quiz-opt.disabled { cursor:default; }
+  .opt-dot { width:22px;height:22px;border-radius:50%;border:2px solid currentColor;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;font-weight:700; }
+  .quiz-feedback {
+    margin-top:14px; padding:12px 16px; border-radius:10px; font-size:.9rem;
+    display:none; line-height:1.6;
+  }
+  .quiz-feedback.show { display:block; }
+  .quiz-feedback.ok { background:rgba(0,212,170,.12); color:var(--accent2); border:1px solid rgba(0,212,170,.3); }
+  .quiz-feedback.ko { background:rgba(255,107,107,.12); color:var(--accent3); border:1px solid rgba(255,107,107,.3); }
+
+  /* ── CALCULATRICE INTERACTIVE ── */
+  .calcul-box {
+    background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius);
+    padding:28px; margin:28px 0;
+  }
+  .calcul-box h4 { color:var(--accent2); font-size:1rem; margin-bottom:4px; }
+  .calcul-box p { color:var(--text2); font-size:.88rem; margin-bottom:18px; }
+  .input-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+  .input-group label { display:block; font-size:.78rem; color:var(--text2); margin-bottom:6px; letter-spacing:.5px; }
+  .input-group input {
+    width:100%; background:var(--card); border:1px solid var(--border);
+    border-radius:8px; padding:10px 14px; color:var(--text); font-size:1rem;
+    outline:none; transition:border .2s;
+  }
+  .input-group input:focus { border-color:var(--accent); }
+  .btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 24px; border-radius:10px; font-size:.92rem; font-weight:700;
+    cursor:pointer; border:none; transition:all .2s;
+  }
+  .btn-primary { background:linear-gradient(135deg,var(--accent),#8b84ff); color:#fff; box-shadow:0 4px 16px rgba(108,99,255,.35); }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 22px rgba(108,99,255,.5); }
+  .btn-secondary { background:var(--card); color:var(--text2); border:1px solid var(--border); }
+  .btn-secondary:hover { color:var(--text); border-color:var(--accent); }
+  .calcul-result {
+    margin-top:16px; padding:18px; background:var(--card); border-radius:12px;
+    border-left:4px solid var(--accent2); display:none;
+  }
+  .calcul-result.show { display:block; }
+  .result-val { font-size:1.6rem; font-weight:900; color:var(--accent2); }
+  .result-detail { font-size:.85rem; color:var(--text2); margin-top:6px; }
+
+  /* ── VISUALISEUR ANGLE ── */
+  .angle-viz { position:relative; width:100%; max-width:340px; margin:0 auto; }
+  canvas#angleCanvas {
+    background:var(--bg); border-radius:12px; border:1px solid var(--border);
+    display:block; width:100%; cursor:crosshair;
+  }
+  .angle-label-box {
+    text-align:center; margin-top:12px; font-size:.95rem; color:var(--accent2); font-weight:700;
+  }
+
+  /* ── ALKASHI OUTIL ── */
+  .triangle-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px; }
+
+  /* ── STEP DEMO ── */
+  .steps { display:flex; flex-direction:column; gap:0; margin:18px 0; }
+  .step-item {
+    display:flex; gap:16px; align-items:flex-start; padding:0;
+    cursor:pointer;
+  }
+  .step-line { display:flex; flex-direction:column; align-items:center; }
+  .step-dot {
+    width:32px;height:32px;border-radius:50%;background:var(--card);border:2px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--text2);
+    flex-shrink:0; transition:all .25s; z-index:1;
+  }
+  .step-connector { width:2px; flex:1; background:var(--border); min-height:18px; }
+  .step-content { flex:1; padding:0 0 20px; }
+  .step-head { font-weight:700; color:var(--text2); font-size:.92rem; margin-bottom:4px; display:flex;align-items:center;gap:8px; }
+  .step-body { color:var(--text2); font-size:.88rem; line-height:1.7; display:none; }
+  .step-item.done .step-dot { background:var(--accent2); border-color:var(--accent2); color:#000; }
+  .step-item.done .step-head { color:var(--text); }
+  .step-item.done .step-body { display:block; }
+
+  /* ── SCROLL TO TOP ── */
+  .fab {
+    position:fixed; bottom:32px; right:32px;
+    width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    box-shadow:0 4px 18px rgba(108,99,255,.5); border:none; font-size:1.2rem;
+    opacity:0; transition:opacity .3s, transform .3s; transform:scale(.8);
+  }
+  .fab.show { opacity:1; transform:scale(1); }
+
+  /* ── SEPARATOR ── */
+  .sep { height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin:40px 0; }
+
+  /* ── NOTATION TABLE ── */
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem; }
+  th { background:var(--bg3); color:var(--accent); padding:10px 14px; text-align:left; font-size:.75rem; letter-spacing:1px; text-transform:uppercase; border-bottom:1px solid var(--border); }
+  td { padding:10px 14px; color:var(--text2); border-bottom:1px solid rgba(46,52,85,.5); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:var(--bg3); color:var(--text); }
+
+  /* ── MISC ── */
+  .highlight { color:var(--accent2); font-weight:700; }
+  .red { color:var(--accent3); }
+  .row { display:flex; gap:18px; flex-wrap:wrap; }
+  .row > * { flex:1; min-width:220px; }
+  .score-badge {
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:99px;padding:6px 16px;font-size:.82rem;color:var(--text2);margin-bottom:14px;
+  }
+  .toc-chip {
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:99px;padding:5px 14px;font-size:.82rem;cursor:pointer;
+    color:var(--text2); transition:all .2s; text-decoration:none;
+  }
+  .toc-chip:hover{border-color:var(--accent);color:var(--accent);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">⟨u·v⟩ Produit Scalaire</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0% complété</div>
+  <div class="badge-level">1STI2D — Maths</div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <h3>Chapitres</h3>
+  <div class="nav-item active" onclick="scrollTo('hero')" id="nav-hero">
+    <span class="nav-icon">🏠</span> Accueil
+  </div>
+  <div class="nav-item" onclick="scrollToId('chap1')" id="nav-chap1">
+    <span class="nav-icon">📐</span> I. Définitions
+  </div>
+  <div class="nav-item" onclick="scrollToId('chap2')" id="nav-chap2">
+    <span class="nav-icon">⊥</span> II. Orthogonalité
+  </div>
+  <div class="nav-item" onclick="scrollToId('chap3')" id="nav-chap3">
+    <span class="nav-icon">🔢</span> III. Repère ortho.
+  </div>
+  <div class="nav-item" onclick="scrollToId('chap4')" id="nav-chap4">
+    <span class="nav-icon">📏</span> IV. Al Kashi
+  </div>
+  <div class="nav-item" onclick="scrollToId('quiz')" id="nav-quiz">
+    <span class="nav-icon">🧠</span> Quiz final
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-subtitle">Chapitre — 1STI2D</div>
+    <h1>Produit Scalaire</h1>
+    <p>Explore les fondements du produit scalaire, l'orthogonalité, les coordonnées et le théorème d'Al Kashi avec des outils interactifs.</p>
+    <div class="hero-tags">
+      <span class="tag">📐 Géométrie vectorielle</span>
+      <span class="tag">🔢 Calcul analytique</span>
+      <span class="tag">📏 Trigonométrie</span>
+      <span class="tag">⊥ Orthogonalité</span>
+    </div>
+    <div style="margin-top:28px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <a class="toc-chip" onclick="scrollToId('chap1')">→ I. Définitions</a>
+      <a class="toc-chip" onclick="scrollToId('chap2')">→ II. Orthogonalité</a>
+      <a class="toc-chip" onclick="scrollToId('chap3')">→ III. Coordonnées</a>
+      <a class="toc-chip" onclick="scrollToId('chap4')">→ IV. Al Kashi</a>
+      <a class="toc-chip" onclick="scrollToId('quiz')">🧠 Quiz</a>
+    </div>
+  </section>
+
+  <!-- ════ CHAPITRE I ════ -->
+  <section class="chapter" id="chap1">
+    <div class="chapter-header">
+      <div class="chapter-num">I</div>
+      <h2>Définition et propriétés</h2>
+    </div>
+
+    <h3>1 · Norme d'un vecteur</h3>
+    <div class="card def">
+      <div class="card-label">📌 Définition</div>
+      <p>Soit un vecteur \(\vec{u}\) et deux points A et B tels que \(\vec{u} = \overrightarrow{AB}\).</p>
+      <p>La <strong>norme du vecteur</strong> \(\vec{u}\), notée \(\|\vec{u}\|\), est la <span class="highlight">distance AB</span>.</p>
+      <div class="formula-box">
+        \[ \|\vec{u}\| = \|\overrightarrow{AB}\| = AB \]
+      </div>
+    </div>
+
+    <div class="conseil-toggle" onclick="toggleConseil(this)">
+      <span class="conseil-icon">💡</span>
+      <span class="conseil-title">Conseil : visualiser la norme</span>
+      <span class="conseil-arrow">▾</span>
+    </div>
+    <div class="conseil-body">
+      La norme est simplement la <strong>longueur</strong> du vecteur. Si A = (0, 0) et B = (3, 4), alors
+      \(\|\overrightarrow{AB}\| = \sqrt{3^2+4^2} = \sqrt{25} = 5\). Pense au théorème de Pythagore !
+    </div>
+
+    <div class="sep"></div>
+
+    <h3>2 · Définition du produit scalaire</h3>
+    <div class="card def">
+      <div class="card-label">📌 Définition</div>
+      <p>Soit \(\vec{u}\) et \(\vec{v}\) deux vecteurs du plan. On appelle <strong>produit scalaire</strong> de \(\vec{u}\) par \(\vec{v}\), noté \(\vec{u} \cdot \vec{v}\), le <span class="highlight">nombre réel</span> défini par :</p>
+      <div class="formula-box">
+        \[ \vec{u} \cdot \vec{v} = \begin{cases} 0 & \text{si } \vec{u} = \vec{0} \text{ ou } \vec{v} = \vec{0} \\[6pt] \|\vec{u}\| \times \|\vec{v}\| \times \cos(\vec{u};\vec{v}) & \text{sinon} \end{cases} \]
+      </div>
+    </div>
+
+    <div class="card warn">
+      <div class="card-label">⚠️ Attention</div>
+      <p>Le produit scalaire de deux vecteurs est un <strong>nombre réel</strong>, pas un vecteur ! Écrire \(\vec{u} \cdot \vec{v} = \vec{0}\) est une maladresse à éviter.</p>
+    </div>
+
+    <!-- Visualiseur interactif -->
+    <div class="calcul-box">
+      <h4>🎮 Visualiseur interactif — Angle entre vecteurs</h4>
+      <p>Déplace le curseur pour changer l'angle et observer le produit scalaire.</p>
+      <div class="row" style="align-items:center; gap:24px;">
+        <div class="angle-viz">
+          <canvas id="angleCanvas" width="300" height="240"></canvas>
+          <div class="angle-label-box" id="angleLabel">Angle : 60° | cos(θ) = 0.500</div>
+        </div>
+        <div style="flex:1;min-width:180px;">
+          <div style="margin-bottom:14px;">
+            <label style="font-size:.8rem;color:var(--text2);display:block;margin-bottom:6px;">Angle θ (degrés)</label>
+            <input type="range" id="angleSlider" min="0" max="179" value="60" style="width:100%;accent-color:var(--accent);">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:.8rem;color:var(--text2);display:block;margin-bottom:6px;">\(\|\vec{u}\|\)</label>
+            <input type="range" id="normU" min="1" max="5" value="3" step=".5" style="width:100%;accent-color:var(--accent2);">
+          </div>
+          <div>
+            <label style="font-size:.8rem;color:var(--text2);display:block;margin-bottom:6px;">\(\|\vec{v}\|\)</label>
+            <input type="range" id="normV" min="1" max="5" value="2" step=".5" style="width:100%;accent-color:var(--accent4);">
+          </div>
+          <div style="margin-top:16px;padding:14px;background:var(--card);border-radius:10px;border:1px solid var(--border);">
+            <div style="font-size:.78rem;color:var(--text2);margin-bottom:4px;">Produit scalaire</div>
+            <div id="psResult" style="font-size:1.8rem;font-weight:900;color:var(--accent2);">—</div>
+            <div id="psFormula" style="font-size:.78rem;color:var(--text2);margin-top:4px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <h3>3 · Propriété de symétrie</h3>
+    <div class="card prop">
+      <div class="card-label">✅ Propriété</div>
+      <p>Pour tout vecteur \(\vec{u}\) et \(\vec{v}\), on a :</p>
+      <div class="formula-box">\[ \vec{u} \cdot \vec{v} = \vec{v} \cdot \vec{u} \]</div>
+    </div>
+
+    <div class="conseil-toggle" onclick="toggleConseil(this)">
+      <span class="conseil-icon">🔍</span>
+      <span class="conseil-title">Voir la démonstration</span>
+      <span class="conseil-arrow">▾</span>
+    </div>
+    <div class="conseil-body">
+      <p>\(\vec{u} \cdot \vec{v} = \|\vec{u}\| \times \|\vec{v}\| \times \cos(\vec{u};\vec{v})\)</p>
+      <p>\(= \|\vec{v}\| \times \|\vec{u}\| \times \cos(-(\vec{v};\vec{u}))\) &nbsp; car \((\vec{u};\vec{v}) = -(\vec{v};\vec{u})\)</p>
+      <p>\(= \|\vec{v}\| \times \|\vec{u}\| \times \cos(\vec{v};\vec{u}) = \vec{v} \cdot \vec{u}\) &nbsp; ✓</p>
+    </div>
+
+    <div class="sep"></div>
+
+    <h3>4 · Opérations sur les produits scalaires</h3>
+    <div class="card prop">
+      <div class="card-label">✅ Propriétés (distributivité & homogénéité)</div>
+      <div class="row" style="margin-top:8px;">
+        <div class="formula-box" style="flex:1;">\[ \vec{u} \cdot (\vec{v} + \vec{w}) = \vec{u} \cdot \vec{v} + \vec{u} \cdot \vec{w} \]</div>
+        <div class="formula-box" style="flex:1;">\[ \vec{u} \cdot (k\vec{v}) = k \, \vec{u} \cdot \vec{v} \]</div>
+      </div>
+    </div>
+
+    <div class="card tip">
+      <div class="card-label">💡 Identités remarquables vectorielles</div>
+      <p>Ces propriétés permettent de développer comme en algèbre :</p>
+      <div class="formula-box">
+        \[ \|\vec{u} + \vec{v}\|^2 = \|\vec{u}\|^2 + 2\vec{u}\cdot\vec{v} + \|\vec{v}\|^2 \]
+      </div>
+      <div class="formula-box">
+        \[ \|\vec{u} - \vec{v}\|^2 = \|\vec{u}\|^2 - 2\vec{u}\cdot\vec{v} + \|\vec{v}\|^2 \]
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CHAPITRE II ════ -->
+  <section class="chapter" id="chap2">
+    <div class="chapter-header">
+      <div class="chapter-num" style="background:linear-gradient(135deg,var(--accent2),#00b89c);">II</div>
+      <h2>Produit scalaire et orthogonalité</h2>
+    </div>
+
+    <h3>1 · Vecteurs orthogonaux</h3>
+    <div class="card prop">
+      <div class="card-label">✅ Propriété fondamentale</div>
+      <p>Les vecteurs \(\vec{u}\) et \(\vec{v}\) sont <strong>orthogonaux</strong> si et seulement si :</p>
+      <div class="formula-box">\[ \vec{u} \cdot \vec{v} = 0 \]</div>
+      <p style="margin-top:10px;">Cela correspond à un angle de <strong>90°</strong> entre les vecteurs (cos(90°) = 0).</p>
+    </div>
+
+    <div class="conseil-toggle" onclick="toggleConseil(this)">
+      <span class="conseil-icon">💡</span>
+      <span class="conseil-title">Moyen mnémotechnique : le signe du produit scalaire</span>
+      <span class="conseil-arrow">▾</span>
+    </div>
+    <div class="conseil-body">
+      <table>
+        <tr><th>Situation</th><th>Angle</th><th>cos(θ)</th><th>Produit scalaire</th></tr>
+        <tr><td>Vecteurs dans le même sens</td><td>0°</td><td>1</td><td>> 0</td></tr>
+        <tr><td>Vecteurs perpendiculaires</td><td>90°</td><td>0</td><td>= 0</td></tr>
+        <tr><td>Vecteurs en sens opposé</td><td>180°</td><td>−1</td><td>< 0</td></tr>
+      </table>
+    </div>
+
+    <div class="sep"></div>
+
+    <h3>2 · Projection orthogonale</h3>
+    <div class="card def">
+      <div class="card-label">📌 Définition</div>
+      <p>Le <strong>projeté orthogonal</strong> du point M sur la droite <em>d</em> est le point H, intersection de <em>d</em> avec la perpendiculaire à <em>d</em> passant par M.</p>
+    </div>
+
+    <div class="card prop">
+      <div class="card-label">✅ Propriété</div>
+      <p>Soit \(\vec{u} = \overrightarrow{OA}\) et \(\vec{v} = \overrightarrow{OB}\), H le projeté orthogonal de B sur (OA). Alors :</p>
+      <div class="formula-box">\[ \vec{u} \cdot \vec{v} = \overrightarrow{OA} \cdot \overrightarrow{OB} = \overrightarrow{OA} \cdot \overrightarrow{OH} \]</div>
+    </div>
+
+    <!-- Démonstration étape par étape -->
+    <div class="conseil-toggle" onclick="toggleConseil(this)">
+      <span class="conseil-icon">📝</span>
+      <span class="conseil-title">Démonstration pas-à-pas (cliquer pour développer)</span>
+      <span class="conseil-arrow">▾</span>
+    </div>
+    <div class="conseil-body">
+      <div class="steps">
+        <div class="step-item" onclick="activateStep(this)">
+          <div class="step-line"><div class="step-dot">1</div><div class="step-connector"></div></div>
+          <div class="step-content">
+            <div class="step-head">Décomposer \(\overrightarrow{OB}\) <span style="font-size:.75rem;color:var(--text2)">(cliquer)</span></div>
+            <div class="step-body">\(\overrightarrow{OB} = \overrightarrow{OH} + \overrightarrow{HB}\)</div>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this)">
+          <div class="step-line"><div class="step-dot">2</div><div class="step-connector"></div></div>
+          <div class="step-content">
+            <div class="step-head">Distribuer le produit scalaire</div>
+            <div class="step-body">\(\overrightarrow{OA} \cdot \overrightarrow{OB} = \overrightarrow{OA} \cdot (\overrightarrow{OH} + \overrightarrow{HB}) = \overrightarrow{OA}\cdot\overrightarrow{OH} + \overrightarrow{OA}\cdot\overrightarrow{HB}\)</div>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this)">
+          <div class="step-line"><div class="step-dot">3</div><div class="step-connector"></div></div>
+          <div class="step-content">
+            <div class="step-head">Utiliser l'orthogonalité de HB</div>
+            <div class="step-body">\(\overrightarrow{OA}\) et \(\overrightarrow{HB}\) sont orthogonaux (par définition de la projection) donc \(\overrightarrow{OA}\cdot\overrightarrow{HB} = 0\).</div>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this)">
+          <div class="step-line"><div class="step-dot">✓</div></div>
+          <div class="step-content">
+            <div class="step-head">Conclusion</div>
+            <div class="step-body">\(\overrightarrow{OA} \cdot \overrightarrow{OB} = \overrightarrow{OA}\cdot\overrightarrow{OH}\) &nbsp; ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exemple carré -->
+    <div class="card example">
+      <div class="card-label">📐 Exemple — Produit scalaire dans un carré ABCD de côté c</div>
+      <p>Calculer \(\overrightarrow{AB} \cdot \overrightarrow{AC}\).</p>
+      <p style="margin-top:10px;">La diagonale AC est la projection de AC sur AB. H est la projection de C sur (AB) et H = B car l'angle en B est droit.</p>
+      <div class="formula-box">
+        \[\overrightarrow{AB} \cdot \overrightarrow{AC} = \overrightarrow{AB} \cdot \overrightarrow{AB} = \|\overrightarrow{AB}\|^2 = c^2\]
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CHAPITRE III ════ -->
+  <section class="chapter" id="chap3">
+    <div class="chapter-header">
+      <div class="chapter-num" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);">III</div>
+      <h2>Produit scalaire dans un repère orthonormé</h2>
+    </div>
+
+    <div class="card prop">
+      <div class="card-label">✅ Propriété — Formule analytique</div>
+      <p>Dans un repère orthonormé \((O;\vec{i};\vec{j})\), soit \(\vec{u}\begin{pmatrix}x\\y\end{pmatrix}\) et \(\vec{v}\begin{pmatrix}x'\\y'\end{pmatrix}\).</p>
+      <div class="row" style="margin-top:10px;">
+        <div class="formula-box" style="flex:1;">
+          \[ \vec{u} \cdot \vec{v} = xx' + yy' \]
+        </div>
+        <div class="formula-box" style="flex:1;">
+          \[ \|\vec{u}\|^2 = x^2 + y^2 \]
+        </div>
+      </div>
+    </div>
+
+    <div class="conseil-toggle" onclick="toggleConseil(this)">
+      <span class="conseil-icon">💡</span>
+      <span class="conseil-title">Pourquoi cette formule est si pratique ?</span>
+      <span class="conseil-arrow">▾</span>
+    </div>
+    <div class="conseil-body">
+      Avec la formule analytique, pas besoin de connaître l'angle entre les vecteurs ! Il suffit de
+      <strong>multiplier les coordonnées correspondantes et d'additionner</strong>. C'est la méthode la plus rapide en exercice.
+    </div>
+
+    <!-- Calculatrice PS par coordonnées -->
+    <div class="calcul-box">
+      <h4>🧮 Calculatrice — Produit scalaire par coordonnées</h4>
+      <p>Saisis les coordonnées de tes vecteurs pour calculer automatiquement.</p>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>x (coord. de \(\vec{u}\))</label>
+          <input type="number" id="ux" value="5" placeholder="x">
+        </div>
+        <div class="input-group">
+          <label>y (coord. de \(\vec{u}\))</label>
+          <input type="number" id="uy" value="-4" placeholder="y">
+        </div>
+        <div class="input-group">
+          <label>x' (coord. de \(\vec{v}\))</label>
+          <input type="number" id="vx" value="-3" placeholder="x'">
+        </div>
+        <div class="input-group">
+          <label>y' (coord. de \(\vec{v}\))</label>
+          <input type="number" id="vy" value="7" placeholder="y'">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="calculPS()">▶ Calculer</button>
+        <button class="btn btn-secondary" onclick="resetPS()">↺ Réinitialiser</button>
+      </div>
+      <div class="calcul-result" id="psCalcResult">
+        <div class="result-val" id="psCalcVal">—</div>
+        <div class="result-detail" id="psCalcDetail"></div>
+      </div>
+    </div>
+
+    <!-- Exemple 5 : angle -->
+    <h3>Déterminer un angle grâce au produit scalaire</h3>
+    <div class="card example">
+      <div class="card-label">📐 Méthode — Calculer un angle entre deux vecteurs</div>
+      <p>On utilise la double formule :</p>
+      <div class="formula-box">
+        \[ \cos(\vec{u};\vec{v}) = \frac{\vec{u}\cdot\vec{v}}{\|\vec{u}\| \times \|\vec{v}\|} = \frac{xx' + yy'}{\sqrt{x^2+y^2}\times\sqrt{x'^2+y'^2}} \]
+      </div>
+      <p style="margin-top:10px;">Puis on applique \(\arccos\) pour obtenir l'angle.</p>
+    </div>
+
+    <!-- Calculatrice angle -->
+    <div class="calcul-box">
+      <h4>📐 Calculatrice — Angle entre deux vecteurs</h4>
+      <p>Utilise les mêmes coordonnées ci-dessus.</p>
+      <button class="btn btn-primary" onclick="calculAngle()">▶ Calculer l'angle</button>
+      <div class="calcul-result" id="angleCalcResult">
+        <div class="result-val" id="angleCalcVal">—</div>
+        <div class="result-detail" id="angleCalcDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CHAPITRE IV ════ -->
+  <section class="chapter" id="chap4">
+    <div class="chapter-header">
+      <div class="chapter-num" style="background:linear-gradient(135deg,var(--accent4),#f59e0b);">IV</div>
+      <h2>Théorème d'Al Kashi</h2>
+    </div>
+
+    <div class="card def" style="border-left-color:var(--accent4);">
+      <div class="card-label" style="color:var(--accent4);">📌 Théorème</div>
+      <p>Dans un triangle ABC, avec a = BC, b = CA, c = AB :</p>
+      <div class="formula-box">
+        \[ a^2 = b^2 + c^2 - 2bc\cos\hat{A} \]
+      </div>
+      <p style="margin-top:10px;">C'est une <strong>généralisation du théorème de Pythagore</strong> pour tout triangle (pas uniquement rectangle) !</p>
+    </div>
+
+    <div class="conseil-toggle" onclick="toggleConseil(this)">
+      <span class="conseil-icon">🔗</span>
+      <span class="conseil-title">Lien avec Pythagore</span>
+      <span class="conseil-arrow">▾</span>
+    </div>
+    <div class="conseil-body">
+      Si \(\hat{A} = 90°\), alors \(\cos(90°) = 0\) et la formule devient \(a^2 = b^2 + c^2\), soit exactement le théorème de Pythagore !
+    </div>
+
+    <!-- Outil Al Kashi -->
+    <div class="calcul-box">
+      <h4>🔢 Outil Al Kashi — Trouver un côté ou un angle</h4>
+      <p>Saisis les mesures connues du triangle.</p>
+      <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="setAlKashiMode('side')" id="modeBtn1" style="flex:1;">Trouver un côté (a)</button>
+        <button class="btn btn-secondary" onclick="setAlKashiMode('angle')" id="modeBtn2" style="flex:1;">Trouver un angle (Â)</button>
+      </div>
+
+      <div id="alkashi-side">
+        <div class="triangle-grid">
+          <div class="input-group"><label>b (côté AC)</label><input type="number" id="ak_b" value="5" placeholder="b"></div>
+          <div class="input-group"><label>c (côté AB)</label><input type="number" id="ak_c" value="6" placeholder="c"></div>
+          <div class="input-group"><label>Â (angle en A, °)</label><input type="number" id="ak_A" value="60" placeholder="angle A°"></div>
+        </div>
+        <button class="btn btn-primary" onclick="alkashiSide()">▶ Calculer a (= BC)</button>
+      </div>
+
+      <div id="alkashi-angle" style="display:none;">
+        <div class="triangle-grid">
+          <div class="input-group"><label>a (côté BC)</label><input type="number" id="ak_a2" value="4" placeholder="a"></div>
+          <div class="input-group"><label>b (côté AC)</label><input type="number" id="ak_b2" value="6" placeholder="b"></div>
+          <div class="input-group"><label>c (côté AB)</label><input type="number" id="ak_c2" value="5" placeholder="c"></div>
+        </div>
+        <button class="btn btn-primary" onclick="alkashiAngle()">▶ Calculer l'angle Â</button>
+      </div>
+
+      <div class="calcul-result" id="alkashiResult">
+        <div class="result-val" id="alkashiVal">—</div>
+        <div class="result-detail" id="alkashiDetail"></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <h3>Égalité du parallélogramme</h3>
+    <div class="card prop">
+      <div class="card-label">✅ Propriété remarquable</div>
+      <p>Dans tout parallélogramme ABCD :</p>
+      <div class="formula-box">
+        \[ AC^2 + BD^2 = AB^2 + BC^2 + CD^2 + AD^2 \]
+      </div>
+      <p style="margin-top:10px;">La somme des carrés des <strong>diagonales</strong> est égale à la somme des carrés des <strong>côtés</strong>.</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-label">📐 Exemple</div>
+      <p>ABCD est un parallélogramme avec AB = 5 cm, AD = 2 cm et \(\widehat{BAD} = 60°\).</p>
+      <p style="margin-top:8px;">Al Kashi dans le triangle ABD :</p>
+      <p>\(BD^2 = 5^2 + 2^2 - 2 \times 5 \times 2 \times \cos(60°) = 25 + 4 - 10 = 19\) &nbsp;→&nbsp; \(BD = \sqrt{19}\) cm</p>
+      <p style="margin-top:8px;">Égalité du parallélogramme :</p>
+      <p>\(AC^2 + 19 = 5^2 + 2^2 + 5^2 + 2^2 = 58\) &nbsp;→&nbsp; \(AC = \sqrt{39}\) cm</p>
+    </div>
+  </section>
+
+  <!-- ════ QUIZ FINAL ════ -->
+  <section class="chapter" id="quiz">
+    <div class="chapter-header">
+      <div class="chapter-num" style="background:linear-gradient(135deg,var(--accent3),#e74c3c);">🧠</div>
+      <h2>Quiz — Teste tes connaissances</h2>
+    </div>
+    <div class="score-badge"><span>⭐</span><span id="scoreLabel">Score : 0 / 6</span></div>
+
+    <!-- Q1 -->
+    <div class="quiz-card">
+      <h4>Question 1</h4>
+      <p>Que vaut \(\vec{u} \cdot \vec{v}\) si les vecteurs sont orthogonaux ?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,0,1,'wrong')"><div class="opt-dot">A</div>1</div>
+        <div class="quiz-opt" onclick="answer(this,0,2,'correct')"><div class="opt-dot">B</div>0</div>
+        <div class="quiz-opt" onclick="answer(this,0,3,'wrong')"><div class="opt-dot">C</div>−1</div>
+        <div class="quiz-opt" onclick="answer(this,0,4,'wrong')"><div class="opt-dot">D</div>Il n'existe pas</div>
+      </div>
+      <div class="quiz-feedback" id="qf0"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card">
+      <h4>Question 2</h4>
+      <p>Quels sont les coordonnées de \(\vec{u}\begin{pmatrix}3\\4\end{pmatrix}\) ? Quelle est sa norme \(\|\vec{u}\|\) ?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,1,1,'wrong')"><div class="opt-dot">A</div>3</div>
+        <div class="quiz-opt" onclick="answer(this,1,2,'wrong')"><div class="opt-dot">B</div>7</div>
+        <div class="quiz-opt" onclick="answer(this,1,3,'correct')"><div class="opt-dot">C</div>5</div>
+        <div class="quiz-opt" onclick="answer(this,1,4,'wrong')"><div class="opt-dot">D</div>\(\sqrt{7}\)</div>
+      </div>
+      <div class="quiz-feedback" id="qf1"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card">
+      <h4>Question 3</h4>
+      <p>Calcule \(\vec{u} \cdot \vec{v}\) pour \(\vec{u}\begin{pmatrix}2\\-1\end{pmatrix}\) et \(\vec{v}\begin{pmatrix}3\\4\end{pmatrix}\).</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,2,1,'correct')"><div class="opt-dot">A</div>2</div>
+        <div class="quiz-opt" onclick="answer(this,2,2,'wrong')"><div class="opt-dot">B</div>10</div>
+        <div class="quiz-opt" onclick="answer(this,2,3,'wrong')"><div class="opt-dot">C</div>−2</div>
+        <div class="quiz-opt" onclick="answer(this,2,4,'wrong')"><div class="opt-dot">D</div>14</div>
+      </div>
+      <div class="quiz-feedback" id="qf2"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card">
+      <h4>Question 4</h4>
+      <p>Le produit scalaire est un…</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,3,1,'wrong')"><div class="opt-dot">A</div>Vecteur</div>
+        <div class="quiz-opt" onclick="answer(this,3,2,'correct')"><div class="opt-dot">B</div>Nombre réel</div>
+        <div class="quiz-opt" onclick="answer(this,3,3,'wrong')"><div class="opt-dot">C</div>Matrice</div>
+        <div class="quiz-opt" onclick="answer(this,3,4,'wrong')"><div class="opt-dot">D</div>Angle</div>
+      </div>
+      <div class="quiz-feedback" id="qf3"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card">
+      <h4>Question 5</h4>
+      <p>Dans un triangle avec a=5, b=6, c=7. Lequel de ces calculs donne correctement cos(Â) par Al Kashi ?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,4,1,'wrong')"><div class="opt-dot">A</div>\(\frac{5^2 - 6^2 - 7^2}{2\times6\times7}\)</div>
+        <div class="quiz-opt" onclick="answer(this,4,2,'correct')"><div class="opt-dot">B</div>\(\frac{6^2 + 7^2 - 5^2}{2\times6\times7}\)</div>
+        <div class="quiz-opt" onclick="answer(this,4,3,'wrong')"><div class="opt-dot">C</div>\(\frac{6^2 - 7^2 + 5^2}{2\times5\times7}\)</div>
+        <div class="quiz-opt" onclick="answer(this,4,4,'wrong')"><div class="opt-dot">D</div>\(\frac{5^2 + 6^2 - 7^2}{2\times5\times6}\)</div>
+      </div>
+      <div class="quiz-feedback" id="qf4"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-card">
+      <h4>Question 6</h4>
+      <p>Si \(\vec{u}\cdot\vec{v} > 0\), que peut-on dire de l'angle \(\theta\) entre les vecteurs ?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answer(this,5,1,'correct')"><div class="opt-dot">A</div>\(0° \leq \theta < 90°\) (angle aigu)</div>
+        <div class="quiz-opt" onclick="answer(this,5,2,'wrong')"><div class="opt-dot">B</div>\(\theta = 90°\) (angle droit)</div>
+        <div class="quiz-opt" onclick="answer(this,5,3,'wrong')"><div class="opt-dot">C</div>\(90° < \theta \leq 180°\) (angle obtus)</div>
+        <div class="quiz-opt" onclick="answer(this,5,4,'wrong')"><div class="opt-dot">D</div>On ne peut pas savoir</div>
+      </div>
+      <div class="quiz-feedback" id="qf5"></div>
+    </div>
+
+    <!-- Résultat final -->
+    <div class="calcul-result show" id="finalResult" style="text-align:center;display:none;">
+      <div class="result-val" id="finalScore">—</div>
+      <div class="result-detail" id="finalMsg"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Fab -->
+<button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ──────────────────────────────────────────────
+//  PROGRESS & NAV
+// ──────────────────────────────────────────────
+const sections = ['hero','chap1','chap2','chap3','chap4','quiz'];
+const navIds   = ['nav-hero','nav-chap1','nav-chap2','nav-chap3','nav-chap4','nav-quiz'];
+
+function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+
+window.addEventListener('scroll', ()=>{
+  // progress
+  const s = document.documentElement;
+  const pct = Math.round(s.scrollTop / (s.scrollHeight - s.clientHeight) * 100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = pct+'% complété';
+
+  // fab
+  document.getElementById('fab').classList.toggle('show', s.scrollTop > 300);
+
+  // nav active
+  let active = 0;
+  sections.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    if(el && el.getBoundingClientRect().top < 120) active = i;
+  });
+  navIds.forEach((id,i)=>document.getElementById(id)?.classList.toggle('active', i===active));
+});
+
+// ──────────────────────────────────────────────
+//  CONSEIL TOGGLE
+// ──────────────────────────────────────────────
+function toggleConseil(btn){
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ──────────────────────────────────────────────
+//  STEP DEMO
+// ──────────────────────────────────────────────
+function activateStep(el){ el.classList.toggle('done'); }
+
+// ──────────────────────────────────────────────
+//  CANVAS — VISUALISEUR ANGLE
+// ──────────────────────────────────────────────
+const canvas = document.getElementById('angleCanvas');
+const ctx2 = canvas.getContext('2d');
+
+function drawVectors(){
+  const angle = +document.getElementById('angleSlider').value;
+  const nU    = +document.getElementById('normU').value;
+  const nV    = +document.getElementById('normV').value;
+  const W = canvas.width, H = canvas.height;
+  const cx = W*.28, cy = H*.6, scale = 36;
+
+  ctx2.clearRect(0,0,W,H);
+
+  // bg grid
+  ctx2.strokeStyle = '#1e2335'; ctx2.lineWidth=1;
+  for(let x=0;x<W;x+=20){ ctx2.beginPath();ctx2.moveTo(x,0);ctx2.lineTo(x,H);ctx2.stroke(); }
+  for(let y=0;y<H;y+=20){ ctx2.beginPath();ctx2.moveTo(0,y);ctx2.lineTo(W,y);ctx2.stroke(); }
+
+  const rad = angle*Math.PI/180;
+  const ux = nU*scale, uy = 0;
+  const vx = nV*scale*Math.cos(rad), vy = -nV*scale*Math.sin(rad);
+
+  function arrow(x1,y1,x2,y2,color){
+    ctx2.beginPath(); ctx2.moveTo(x1,y1); ctx2.lineTo(x2,y2);
+    ctx2.strokeStyle=color; ctx2.lineWidth=2.5; ctx2.stroke();
+    const a=Math.atan2(y2-y1,x2-x1);
+    ctx2.beginPath();
+    ctx2.moveTo(x2,y2);
+    ctx2.lineTo(x2-10*Math.cos(a-0.35), y2-10*Math.sin(a-0.35));
+    ctx2.lineTo(x2-10*Math.cos(a+0.35), y2-10*Math.sin(a+0.35));
+    ctx2.closePath(); ctx2.fillStyle=color; ctx2.fill();
+  }
+
+  // arc angle
+  ctx2.beginPath();
+  ctx2.arc(cx,cy, 28, -rad, 0, rad>0);
+  ctx2.strokeStyle='rgba(255,209,102,.5)'; ctx2.lineWidth=1.5; ctx2.stroke();
+
+  arrow(cx, cy, cx+ux, cy+uy, '#6c63ff');
+  arrow(cx, cy, cx+vx, cy+vy, '#00d4aa');
+
+  ctx2.font='bold 13px Segoe UI'; ctx2.fillStyle='#6c63ff';
+  ctx2.fillText('u', cx+ux/2-4, cy+18);
+  ctx2.fillStyle='#00d4aa';
+  ctx2.fillText('v', cx+vx/2+6, cy+vy/2-6);
+
+  // dot product sign indicator
+  const dot = nU*nV*Math.cos(rad);
+  ctx2.font='11px Segoe UI'; ctx2.fillStyle=dot>0.001?'#00d4aa':dot<-0.001?'#ff6b6b':'#ffd166';
+  const sign = dot>0.001?'u·v > 0':dot<-0.001?'u·v < 0':'u·v = 0';
+  ctx2.fillText(sign, W-80, 20);
+
+  document.getElementById('angleLabel').textContent =
+    `Angle : ${angle}° | cos(θ) = ${Math.cos(rad).toFixed(3)}`;
+
+  const ps = (nU*nV*Math.cos(rad));
+  document.getElementById('psResult').textContent = ps.toFixed(3);
+  document.getElementById('psFormula').textContent =
+    `${nU} × ${nV} × cos(${angle}°) = ${ps.toFixed(3)}`;
+}
+
+['angleSlider','normU','normV'].forEach(id=>
+  document.getElementById(id).addEventListener('input', drawVectors));
+drawVectors();
+
+// ──────────────────────────────────────────────
+//  CALCULATRICE PS COORDONNÉES
+// ──────────────────────────────────────────────
+function calculPS(){
+  const ux=+document.getElementById('ux').value, uy=+document.getElementById('uy').value;
+  const vx=+document.getElementById('vx').value, vy=+document.getElementById('vy').value;
+  const ps = ux*vx + uy*vy;
+  const res = document.getElementById('psCalcResult');
+  res.classList.add('show');
+  document.getElementById('psCalcVal').textContent = ps;
+  document.getElementById('psCalcDetail').innerHTML =
+    `\\(\\vec{u}\\cdot\\vec{v} = (${ux})\\times(${vx}) + (${uy})\\times(${vy}) = ${ux*vx} + ${uy*vy} = ${ps}\\)`;
+  MathJax.typesetPromise([res]);
+}
+function resetPS(){
+  ['ux','uy','vx','vy'].forEach((id,i)=>{
+    document.getElementById(id).value=['5','-4','-3','7'][i];
+  });
+  document.getElementById('psCalcResult').classList.remove('show');
+}
+
+// ──────────────────────────────────────────────
+//  CALCULATRICE ANGLE
+// ──────────────────────────────────────────────
+function calculAngle(){
+  const ux=+document.getElementById('ux').value, uy=+document.getElementById('uy').value;
+  const vx=+document.getElementById('vx').value, vy=+document.getElementById('vy').value;
+  const ps = ux*vx + uy*vy;
+  const normU = Math.sqrt(ux*ux+uy*uy);
+  const normV = Math.sqrt(vx*vx+vy*vy);
+  if(normU===0||normV===0){ alert('Un vecteur est nul, angle indéfini.'); return; }
+  const cosA = ps/(normU*normV);
+  const angle = Math.acos(Math.max(-1,Math.min(1,cosA)))*180/Math.PI;
+  const res = document.getElementById('angleCalcResult');
+  res.classList.add('show');
+  document.getElementById('angleCalcVal').textContent = angle.toFixed(1)+'°';
+  document.getElementById('angleCalcDetail').innerHTML =
+    `\\(\\cos\\theta = \\frac{${ps}}{${normU.toFixed(3)}\\times${normV.toFixed(3)}} = ${cosA.toFixed(4)}\\)`;
+  MathJax.typesetPromise([res]);
+}
+
+// ──────────────────────────────────────────────
+//  AL KASHI
+// ──────────────────────────────────────────────
+let alkashiMode = 'side';
+function setAlKashiMode(m){
+  alkashiMode = m;
+  document.getElementById('alkashi-side').style.display = m==='side'?'block':'none';
+  document.getElementById('alkashi-angle').style.display = m==='angle'?'block':'none';
+  document.getElementById('modeBtn1').className = 'btn '+(m==='side'?'btn-primary':'btn-secondary');
+  document.getElementById('modeBtn2').className = 'btn '+(m==='angle'?'btn-primary':'btn-secondary');
+  document.getElementById('alkashiResult').classList.remove('show');
+}
+
+function alkashiSide(){
+  const b=+document.getElementById('ak_b').value;
+  const c=+document.getElementById('ak_c').value;
+  const A=+document.getElementById('ak_A').value*Math.PI/180;
+  const a2 = b*b + c*c - 2*b*c*Math.cos(A);
+  if(a2<0){alert('Valeurs invalides');return;}
+  const a = Math.sqrt(a2);
+  const res=document.getElementById('alkashiResult');
+  res.classList.add('show');
+  document.getElementById('alkashiVal').textContent = 'a = '+a.toFixed(4);
+  document.getElementById('alkashiDetail').innerHTML =
+    `\\(a^2 = ${b}^2 + ${c}^2 - 2\\times${b}\\times${c}\\times\\cos(${Math.round(+document.getElementById('ak_A').value)}°) = ${a2.toFixed(4)}\\)`;
+  MathJax.typesetPromise([res]);
+}
+
+function alkashiAngle(){
+  const a=+document.getElementById('ak_a2').value;
+  const b=+document.getElementById('ak_b2').value;
+  const c=+document.getElementById('ak_c2').value;
+  const cosA = (b*b+c*c-a*a)/(2*b*c);
+  if(Math.abs(cosA)>1){alert('Triangle impossible');return;}
+  const A = Math.acos(cosA)*180/Math.PI;
+  const res=document.getElementById('alkashiResult');
+  res.classList.add('show');
+  document.getElementById('alkashiVal').textContent = 'Â ≈ '+A.toFixed(1)+'°';
+  document.getElementById('alkashiDetail').innerHTML =
+    `\\(\\cos\\hat{A} = \\frac{${b}^2+${c}^2-${a}^2}{2\\times${b}\\times${c}} = \\frac{${b*b+c*c-a*a}}{${2*b*c}} \\approx ${cosA.toFixed(4)}\\)`;
+  MathJax.typesetPromise([res]);
+}
+
+// ──────────────────────────────────────────────
+//  QUIZ
+// ──────────────────────────────────────────────
+const scores = Array(6).fill(null);
+const feedbacks = [
+  {ok:'✅ Exact ! Si cos(90°) = 0, alors u·v = 0. C\'est la définition de l\'orthogonalité.', ko:'❌ Non. Rappel : u·v = ‖u‖‖v‖cos(θ). Si θ=90°, cos(90°)=0 donc u·v = 0.'},
+  {ok:'✅ Bravo ! ‖u‖ = √(3²+4²) = √25 = 5. Pythagore en action !', ko:'❌ Rappel : ‖u‖ = √(x²+y²) = √(9+16) = 5.'},
+  {ok:'✅ Correct ! 2×3 + (−1)×4 = 6 − 4 = 2.', ko:'❌ u·v = 2×3 + (−1)×4 = 6 − 4 = 2. Attention aux signes !'},
+  {ok:'✅ Exact ! Le produit scalaire est toujours un nombre réel, jamais un vecteur.', ko:'❌ Non. u·v est un nombre réel. Écrire u·v = ⃗0 est une erreur !'},
+  {ok:'✅ Excellent ! On isole cos(Â) depuis a² = b²+c² − 2bc·cos(Â).', ko:'❌ La formule est a² = b²+c² − 2bc·cos(Â), donc cos(Â) = (b²+c²−a²)/(2bc).'},
+  {ok:'✅ Bravo ! cos(θ) > 0 ⟺ 0° ≤ θ < 90° (angle aigu).', ko:'❌ Si u·v > 0, cos(θ) > 0, donc θ est entre 0° et 90° (aigu).'},
+];
+
+function answer(el, qIdx, optVal, result){
+  const container = el.closest('.quiz-card');
+  const opts = container.querySelectorAll('.quiz-opt');
+  if(opts[0].classList.contains('disabled')) return;
+  opts.forEach(o=>o.classList.add('disabled'));
+
+  el.classList.add(result);
+  const fb = document.getElementById('qf'+qIdx);
+  fb.classList.add('show', result==='correct'?'ok':'ko');
+  fb.textContent = result==='correct' ? feedbacks[qIdx].ok : feedbacks[qIdx].ko;
+
+  scores[qIdx] = result==='correct';
+  const total = scores.filter(s=>s===true).length;
+  const done  = scores.filter(s=>s!==null).length;
+  document.getElementById('scoreLabel').textContent = `Score : ${total} / ${done}`;
+
+  if(done===6){
+    const fr = document.getElementById('finalResult');
+    fr.style.display='block';
+    document.getElementById('finalScore').textContent = total+'/6';
+    const msgs = ['Continue tes révisions 💪','Tu progresses bien ! 📚','Bon travail ! 👍','Très bien ! 🎉','Excellent travail ! 🌟','Parfait ! Tu maîtrises le cours ! 🏆'];
+    document.getElementById('finalMsg').textContent = msgs[total];
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page avec boutons</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .btn {
+            background: white;
+            color: #667eea;
+            padding: 20px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        /* Couleurs alternatives pour certains boutons */
+        .btn:nth-child(3n+1) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn:nth-child(3n+2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn:nth-child(3n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sélectionnez une option</h1>
+        
+        <div class="button-grid">
+            <a href="math/derivation.html" class="btn">derivation</a>
+            <a href="math/Fonctions Polynômes de Degré 2.html" class="btn">Fonctions Polynômes de Degré 2.html</a>
+            <a href="math/Généralités sur les Fonctions.html" class="btn">Généralités sur les Fonctions.html</a>
+            <a href="math/pourcentage.html" class="btn">pourcentage</a>
+            <a href="math/Produit Scalaire.html" class="btn">Produit Scalaire</a>
+            <a href="page6.html" class="btn">Bouton 6</a>
+            <a href="page7.html" class="btn">Bouton 7</a>
+            <a href="page8.html" class="btn">Bouton 8</a>
+            <a href="page9.html" class="btn">Bouton 9</a>
+            <a href="page10.html" class="btn">Bouton 10</a>
+            <a href="page11.html" class="btn">Bouton 11</a>
+            <a href="page12.html" class="btn">Bouton 12</a>
+            <a href="page13.html" class="btn">Bouton 13</a>
+            <a href="page14.html" class="btn">Bouton 14</a>
+            <a href="page15.html" class="btn">Bouton 15</a>
+            <a href="page16.html" class="btn">Bouton 16</a>
+            <a href="page17.html" class="btn">Bouton 17</a>
+            <a href="page18.html" class="btn">Bouton 18</a>
+            <a href="page19.html" class="btn">Bouton 19</a>
+            <a href="page20.html" class="btn">Bouton 20</a>
+        </div>
+    </div>
+</body>
+</html>

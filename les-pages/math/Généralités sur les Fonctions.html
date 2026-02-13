@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Généralités sur les Fonctions — 1STI2D</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1412;
+    --cream: #faf7f2;
+    --warm-white: #f5f0e8;
+    --accent: #c0392b;
+    --accent-light: #e74c3c;
+    --gold: #d4a843;
+    --gold-light: #f0c860;
+    --blue: #2471a3;
+    --blue-light: #3498db;
+    --green: #1e8449;
+    --green-light: #27ae60;
+    --purple: #7d3c98;
+    --gray: #7f8c8d;
+    --gray-light: #bdc3c7;
+    --border: #d5cfc4;
+    --shadow: rgba(26,20,18,0.12);
+    --card-bg: #ffffff;
+    --section-bg: #fefcf8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px var(--shadow);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .header-badge {
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  nav {
+    display: flex;
+    gap: 4px;
+  }
+  nav a {
+    color: var(--gray-light);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  nav a:hover { color: var(--cream); background: rgba(255,255,255,0.1); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+  }
+  #progress-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--accent-light));
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 72px 32px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 80% at 20% 50%, rgba(192,57,43,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 70% at 80% 30%, rgba(212,168,67,0.1) 0%, transparent 70%);
+  }
+  .hero-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+  .hero-desc {
+    margin: 20px auto 0;
+    max-width: 560px;
+    color: var(--gray-light);
+    font-size: 1.05rem;
+    position: relative;
+  }
+  .hero-chips {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 32px;
+    position: relative;
+  }
+  .chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--gray-light);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip span { font-size: 1rem; }
+
+  /* ── CHAPTER NAV ── */
+  .chapters-nav {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .chapter-btn {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.25s;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .chapter-btn:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(192,57,43,0.12);
+  }
+  .chapter-btn.active {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, #fff5f4, #fff);
+  }
+  .chapter-num {
+    width: 38px; height: 38px;
+    background: var(--ink);
+    color: var(--gold);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .chapter-info h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .chapter-info p {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-top: 2px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main-content {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .main-content { grid-template-columns: 1fr; }
+    .sidebar { order: -1; }
+  }
+
+  /* ── SECTIONS ── */
+  .course-section {
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-number {
+    width: 48px; height: 48px;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title-wrap h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .section-title-wrap p {
+    font-size: 0.83rem;
+    color: var(--gray);
+    margin-top: 2px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .card-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── DEFINITION BOX ── */
+  .def-box {
+    background: linear-gradient(135deg, #1a1412 0%, #2d2420 100%);
+    color: var(--cream);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .def-box::before {
+    content: '✦';
+    position: absolute;
+    right: 20px; top: 16px;
+    color: var(--gold);
+    font-size: 1.5rem;
+    opacity: 0.5;
+  }
+  .def-box .def-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .def-box p {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .def-box .math {
+    color: var(--gold-light);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+  }
+
+  /* ── PROP BOX ── */
+  .prop-box {
+    border-left: 4px solid var(--blue);
+    background: linear-gradient(135deg, #eaf4fd, #f8fbff);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 22px;
+    margin-bottom: 20px;
+  }
+  .prop-box .prop-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+
+  /* ── EXAMPLE ── */
+  .example-block {
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    transition: box-shadow 0.2s;
+  }
+  .example-block:hover {
+    box-shadow: 0 6px 20px var(--shadow);
+  }
+  .example-header {
+    background: var(--warm-white);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .example-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .example-header h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    flex: 1;
+  }
+  .example-toggle {
+    font-size: 1.1rem;
+    color: var(--gray);
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+  .example-toggle.open { transform: rotate(180deg); }
+  .example-body {
+    padding: 22px;
+    background: white;
+  }
+  .example-question {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  /* ── CORRECTION ── */
+  .correction-wrap {
+    margin-top: 16px;
+  }
+  .btn-show-correction {
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-show-correction:hover {
+    background: var(--accent);
+    transform: translateY(-1px);
+  }
+  .correction-content {
+    display: none;
+    margin-top: 16px;
+    background: linear-gradient(135deg, #f0faf4, #e8f8f0);
+    border: 1.5px solid var(--green-light);
+    border-radius: 12px;
+    padding: 20px 22px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .correction-content.visible { display: block; }
+  .correction-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── MATH DISPLAY ── */
+  .math-block {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--ink);
+    color: var(--gold-light);
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    margin: 12px 0;
+  }
+  .math-inline {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-size: 0.93em;
+    background: #fff0ef;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+  .math-result {
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .math-step {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    margin: 4px 0;
+  }
+  .step-label {
+    color: var(--gray);
+    font-size: 0.75rem;
+    min-width: 60px;
+    font-family: 'DM Sans', sans-serif;
+    font-style: italic;
+  }
+
+  /* ── TIP BOX ── */
+  .tip-box {
+    background: linear-gradient(135deg, #fffbf0, #fff8e6);
+    border: 1.5px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .tip-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .tip-content .tip-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .tip-content p { font-size: 0.9rem; line-height: 1.55; }
+
+  /* ── WARNING BOX ── */
+  .warning-box {
+    background: linear-gradient(135deg, #fff5f4, #fff0ef);
+    border: 1.5px solid var(--accent);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .warning-box .tip-title { color: var(--accent); }
+
+  /* ── INTERACTIVE CALCULATOR ── */
+  .calc-section {
+    background: linear-gradient(135deg, #f8f0ff, #ede5ff);
+    border: 2px solid #c39bd3;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .calc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--purple);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) {
+    .calc-grid { grid-template-columns: 1fr; }
+  }
+  .calc-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .calc-group select,
+  .calc-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #c39bd3;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    background: white;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .calc-group select:focus,
+  .calc-group input:focus {
+    border-color: var(--purple);
+  }
+  .btn-calc {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-calc:hover {
+    background: #6c3483;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(125,60,152,0.3);
+  }
+  .calc-result {
+    margin-top: 16px;
+    background: var(--ink);
+    color: var(--gold-light);
+    font-family: 'JetBrains Mono', monospace;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .calc-result.visible { display: block; }
+
+  /* ── GRAPH CANVAS ── */
+  .graph-container {
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 24px 0;
+    background: white;
+  }
+  .graph-header {
+    background: var(--warm-white);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .graph-header h4 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .graph-controls {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-graph {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+    color: var(--ink);
+  }
+  .btn-graph:hover, .btn-graph.active {
+    background: var(--ink);
+    color: var(--gold);
+    border-color: var(--ink);
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    max-height: 320px;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-section {
+    background: linear-gradient(135deg, #e8f8f0, #d5f5e3);
+    border: 2px solid var(--green-light);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .quiz-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--green);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .quiz-question {
+    font-size: 0.97rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .quiz-opt {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .quiz-opt:hover { border-color: var(--green-light); background: #f0fff6; }
+  .quiz-opt.correct { border-color: var(--green); background: #e8f8f0; }
+  .quiz-opt.wrong { border-color: var(--accent); background: #fff0ef; }
+  .quiz-opt .opt-letter {
+    width: 28px; height: 28px;
+    background: var(--warm-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s;
+  }
+  .quiz-opt.correct .opt-letter { background: var(--green); color: white; }
+  .quiz-opt.wrong .opt-letter { background: var(--accent); color: white; }
+  .quiz-feedback {
+    display: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
+  }
+  .quiz-feedback.success {
+    display: block;
+    background: #d5f5e3;
+    color: var(--green);
+    border: 1px solid var(--green-light);
+  }
+  .quiz-feedback.error {
+    display: block;
+    background: #fdecea;
+    color: var(--accent);
+    border: 1px solid #f5b7b1;
+  }
+  .btn-quiz-next {
+    margin-top: 12px;
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: background 0.2s;
+  }
+  .btn-quiz-next.visible { display: inline-flex; align-items: center; gap: 6px; }
+  .btn-quiz-next:hover { background: var(--green-light); }
+
+  /* ── TAUX DE VARIATION WIDGET ── */
+  .taux-widget {
+    background: linear-gradient(135deg, #eaf4fd, #dce8f5);
+    border: 2px solid var(--blue-light);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .taux-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--blue);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .taux-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) {
+    .taux-inputs { grid-template-columns: 1fr; }
+  }
+  .taux-inputs label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 5px;
+  }
+  .taux-inputs input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--blue-light);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92rem;
+    background: white;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .taux-inputs input:focus { border-color: var(--blue); }
+  .btn-taux {
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-taux:hover { background: var(--blue-light); transform: translateY(-1px); }
+  .taux-result {
+    margin-top: 16px;
+    display: none;
+  }
+  .taux-result.visible { display: block; }
+  .formula-display {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--ink);
+    color: var(--gold-light);
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 2;
+  }
+  .taux-sign {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-top: 12px;
+  }
+  .taux-sign.pos { background: #d5f5e3; color: var(--green); }
+  .taux-sign.neg { background: #fdecea; color: var(--accent); }
+  .taux-sign.zero { background: #f8f9fa; color: var(--gray); }
+
+  /* ── SIDEBAR ── */
+  .sidebar { position: sticky; top: 80px; }
+  .sidebar-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .sidebar-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .progress-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+  }
+  .progress-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .progress-dot.done { background: var(--green); }
+  .progress-dot.current { background: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,0.3); }
+  .formulary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .formula-item {
+    background: var(--warm-white);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+  }
+  .formula-item .fl {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+  }
+  .formula-item .fv {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+  .key-word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .kw {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .kw:hover { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+
+  /* ── SEPARATORS ── */
+  .section-sep {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--gray-light);
+    text-align: center;
+    padding: 28px 32px;
+    margin-top: 60px;
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── SCROLL TO TOP ── */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--ink);
+    color: var(--gold);
+    border: none;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px var(--shadow);
+    transition: all 0.2s;
+    z-index: 200;
+  }
+  .scroll-top.visible { display: flex; }
+  .scroll-top:hover { background: var(--accent); transform: translateY(-2px); }
+
+  /* ── NOTION / TERM ── */
+  .term {
+    border-bottom: 2px dotted var(--accent);
+    cursor: help;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ── TABLE ── */
+  .val-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 16px 0;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .val-table th {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    padding: 10px 14px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+  .val-table td {
+    border: 1px solid var(--border);
+    padding: 9px 14px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+  }
+  .val-table tr:nth-child(even) td { background: var(--warm-white); }
+  .val-table tr.highlight td { background: #fff0ef; color: var(--accent); font-weight: 700; }
+
+  /* ── MONOTONIE ── */
+  .mono-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  @media (max-width: 700px) {
+    .mono-cards { grid-template-columns: 1fr; }
+  }
+  .mono-card {
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .mono-card.croissante { background: linear-gradient(135deg, #d5f5e3, #eafaf1); border: 1.5px solid var(--green-light); }
+  .mono-card.decroissante { background: linear-gradient(135deg, #fdecea, #fff5f4); border: 1.5px solid #f5b7b1; }
+  .mono-card.constante { background: linear-gradient(135deg, #fef9e7, #fffde7); border: 1.5px solid var(--gold); }
+  .mono-card .mc-icon { font-size: 2rem; margin-bottom: 8px; }
+  .mono-card .mc-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .mono-card.croissante .mc-label { color: var(--green); }
+  .mono-card.decroissante .mc-label { color: var(--accent); }
+  .mono-card.constante .mc-label { color: #b7950b; }
+  .mono-card p { font-size: 0.82rem; color: var(--gray); line-height: 1.5; }
+
+  /* NOTIFY */
+  .notify {
+    position: fixed;
+    top: 80px; right: 20px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    display: none;
+    z-index: 500;
+    box-shadow: 0 4px 20px var(--shadow);
+    animation: slideIn 0.3s ease;
+    border-left: 4px solid var(--gold);
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-title">𝑓(𝑥) — Généralités sur les Fonctions</div>
+    <nav>
+      <a href="#section-I">I. Définitions</a>
+      <a href="#section-II">II. Graphique</a>
+      <a href="#section-III">III. Équations</a>
+      <a href="#section-IV">IV. Variations</a>
+    </nav>
+    <div class="header-badge">1STI2D</div>
+  </div>
+</header>
+
+<!-- NOTIFICATION -->
+<div class="notify" id="notify"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-subtitle">Mathématiques · Première STI2D</div>
+  <h1>Généralités sur les <em>Fonctions</em></h1>
+  <p class="hero-desc">Un cours interactif complet : définitions, exemples guidés, calculateurs et quiz pour maîtriser les bases des fonctions.</p>
+  <div class="hero-chips">
+    <div class="chip"><span>🎯</span> 4 chapitres</div>
+    <div class="chip"><span>🧮</span> Calculateurs interactifs</div>
+    <div class="chip"><span>📊</span> Graphiques dynamiques</div>
+    <div class="chip"><span>✅</span> Quiz d'entraînement</div>
+  </div>
+</section>
+
+<!-- CHAPTER NAV -->
+<div class="chapters-nav">
+  <button class="chapter-btn" onclick="scrollTo('#section-I')">
+    <div class="chapter-num">I</div>
+    <div class="chapter-info"><h3>Définitions et notations</h3><p>Image, antécédent, notation</p></div>
+  </button>
+  <button class="chapter-btn" onclick="scrollTo('#section-II')">
+    <div class="chapter-num">II</div>
+    <div class="chapter-info"><h3>Représentation graphique</h3><p>Courbe, repère, tableau</p></div>
+  </button>
+  <button class="chapter-btn" onclick="scrollTo('#section-III')">
+    <div class="chapter-num">III</div>
+    <div class="chapter-info"><h3>Équations & inéquations</h3><p>Résolution graphique</p></div>
+  </button>
+  <button class="chapter-btn" onclick="scrollTo('#section-IV')">
+    <div class="chapter-num">IV</div>
+    <div class="chapter-info"><h3>Variations d'une fonction</h3><p>Taux de variation, monotonie</p></div>
+  </button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-content">
+  <!-- CONTENT -->
+  <main>
+
+    <!-- ═══ SECTION I ═══ -->
+    <section id="section-I" class="course-section">
+      <div class="section-header">
+        <div class="section-number">I</div>
+        <div class="section-title-wrap">
+          <h2>Définitions et Notations</h2>
+          <p>Image · Antécédent · Notation fonctionnelle</p>
+        </div>
+      </div>
+
+      <!-- 1. Définition -->
+      <div class="card">
+        <div class="card-title" style="color:var(--accent)">📖 1) Définition</div>
+        
+        <div class="def-box">
+          <div class="def-label">Définition fondamentale</div>
+          <p>Une <strong>fonction</strong> <span class="math">f</span> associe à tout nombre réel <span class="math">x</span> un <strong>unique</strong> nombre réel, noté <span class="math">f(x)</span>.</p>
+          <p style="margin-top:10px">On note aussi : <span class="math">x ↦ f(x)</span> &nbsp;ou&nbsp; <span class="math">y = f(x)</span></p>
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-icon">💡</div>
+          <div class="tip-content">
+            <div class="tip-title">Exemple concret</div>
+            <p>L'aire d'un rectangle de largeur 3 et de longueur <span class="math-inline">x</span> est : <span class="math-inline">f(x) = 3x</span>. Chaque valeur de <span class="math-inline">x</span> donne une unique aire.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Image et antécédent -->
+      <div class="card">
+        <div class="card-title" style="color:var(--blue)">🔄 2) Image et Antécédent</div>
+
+        <div class="def-box">
+          <div class="def-label">Vocabulaire clé</div>
+          <p>Si <span class="math">f(2) = 5</span>, alors :</p>
+          <p>• L'<strong>image</strong> de <span class="math">2</span> par <span class="math">f</span> est <strong>5</strong></p>
+          <p>• Un <strong>antécédent</strong> de <span class="math">5</span> par <span class="math">f</span> est <strong>2</strong></p>
+        </div>
+
+        <!-- Visual diagram -->
+        <div style="display:flex;justify-content:center;margin:20px 0;">
+          <div style="background:var(--warm-white);border:2px solid var(--border);border-radius:16px;padding:24px 40px;text-align:center;position:relative;">
+            <div style="display:flex;align-items:center;gap:40px;">
+              <div style="background:var(--ink);color:var(--gold);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:1.3rem;font-weight:700;">2</div>
+              <div style="text-align:center;">
+                <div style="font-family:'JetBrains Mono';color:var(--accent);font-weight:700;letter-spacing:3px;">⟶ f ⟶</div>
+                <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">f(2) = 5</div>
+              </div>
+              <div style="background:var(--accent);color:white;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:1.3rem;font-weight:700;">5</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:12px;">
+              <div style="font-size:0.75rem;color:var(--blue);font-weight:600;">ANTÉCÉDENT de 5</div>
+              <div style="font-size:0.75rem;color:var(--accent);font-weight:600;">IMAGE de 2</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <div class="tip-icon">⚠️</div>
+          <div class="tip-content">
+            <div class="tip-title">Attention !</div>
+            <p>Un nombre possède une <strong>unique image</strong>, mais peut avoir <strong>plusieurs antécédents</strong>. Par exemple pour <span class="math-inline">g(x) = x²</span>, les antécédents de 4 sont +2 et −2.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemple 3 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 3</div>
+          <h4>Calculer une image par calcul</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <div class="example-question">
+            Soit <span class="math-inline">g(x) = x² − 2</span>. Calculer l'image de 6 par la fonction <span class="math-inline">g</span>.
+          </div>
+          <div class="correction-wrap">
+            <button class="btn-show-correction" onclick="showCorrection(this)">
+              🔍 Voir la correction
+            </button>
+            <div class="correction-content">
+              <div class="correction-title">✅ Correction</div>
+              <div class="math-block">
+                <div class="math-step"><span class="step-label">Formule</span> g(x) = x² − 2</div>
+                <div class="math-step"><span class="step-label">x = 6</span> g(6) = 6² − 2</div>
+                <div class="math-step"><span class="step-label">Calcul</span> g(6) = 36 − 2</div>
+                <div class="math-step"><span class="step-label">Résultat</span> <span class="math-result">g(6) = 34</span></div>
+              </div>
+              <p style="margin-top:12px;font-size:0.92rem;">L'image de 6 par la fonction <span class="math-inline">g</span> est <strong>34</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemple 4 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 4</div>
+          <h4>Déterminer un antécédent par calcul</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <div class="example-question">
+            Soit <span class="math-inline">f(x) = 2x − 3</span>. Déterminer un antécédent de −5 par la fonction <span class="math-inline">f</span>.
+          </div>
+          <div class="correction-wrap">
+            <button class="btn-show-correction" onclick="showCorrection(this)">
+              🔍 Voir la correction
+            </button>
+            <div class="correction-content">
+              <div class="correction-title">✅ Correction</div>
+              <p style="margin-bottom:10px;font-size:0.9rem;">On cherche un antécédent de −5, donc −5 est une <strong>image</strong>. On pose f(x) = −5 :</p>
+              <div class="math-block">
+                <div class="math-step"><span class="step-label">Équation</span> 2x − 3 = −5</div>
+                <div class="math-step"><span class="step-label">Étape 1</span> 2x = −5 + 3</div>
+                <div class="math-step"><span class="step-label">Étape 2</span> 2x = −2</div>
+                <div class="math-step"><span class="step-label">Solution</span> <span class="math-result">x = −1</span></div>
+              </div>
+              <p style="margin-top:12px;font-size:0.92rem;">L'antécédent de −5 par <span class="math-inline">f</span> est <strong>−1</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATEUR INTERACTIF -->
+      <div class="calc-section">
+        <div class="calc-title">🧮 Calculateur interactif — Images & Antécédents</div>
+        <div class="calc-grid">
+          <div class="calc-group">
+            <label>Fonction f(x) =</label>
+            <select id="funcType">
+              <option value="linear">ax + b (affine)</option>
+              <option value="quad">x² + bx + c (quadratique)</option>
+              <option value="custom">x² − 2 (exemple cours)</option>
+            </select>
+          </div>
+          <div class="calc-group">
+            <label>Paramètre a</label>
+            <input type="number" id="paramA" value="2" step="0.5">
+          </div>
+          <div class="calc-group">
+            <label>Paramètre b</label>
+            <input type="number" id="paramB" value="-3" step="0.5">
+          </div>
+          <div class="calc-group">
+            <label>Valeur de x</label>
+            <input type="number" id="calcX" value="3" step="0.5">
+          </div>
+        </div>
+        <button class="btn-calc" onclick="calculateImage()">📐 Calculer l'image</button>
+        <div class="calc-result" id="calcResult"></div>
+      </div>
+
+      <!-- QUIZ I -->
+      <div class="quiz-section" id="quiz1">
+        <div class="quiz-title">✅ Quiz — Vérifie ta compréhension</div>
+        <div class="quiz-question" id="q1-text">Soit f(x) = 3x + 1. Quelle est l'image de 4 par f ?</div>
+        <div class="quiz-options" id="q1-opts">
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz1', false)">
+            <div class="opt-letter">A</div> f(4) = 12
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz1', true)">
+            <div class="opt-letter">B</div> f(4) = 13
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz1', false)">
+            <div class="opt-letter">C</div> f(4) = 7
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz1', false)">
+            <div class="opt-letter">D</div> f(4) = 4
+          </div>
+        </div>
+        <div class="quiz-feedback" id="quiz1-feedback"></div>
+        <button class="btn-quiz-next" id="quiz1-next" onclick="nextQuiz()">Question suivante →</button>
+      </div>
+    </section>
+
+    <hr class="section-sep">
+
+    <!-- ═══ SECTION II ═══ -->
+    <section id="section-II" class="course-section">
+      <div class="section-header">
+        <div class="section-number">II</div>
+        <div class="section-title-wrap">
+          <h2>Représentation Graphique</h2>
+          <p>Courbe représentative · Repère cartésien</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="color:var(--accent)">📐 Principe</div>
+        <div class="def-box">
+          <div class="def-label">Représentation graphique</div>
+          <p>On place en <strong>abscisse</strong> les valeurs de <span class="math">x</span>, et en <strong>ordonnée</strong> les valeurs de <span class="math">f(x)</span>.</p>
+          <p style="margin-top:8px">Tout point de la courbe a des coordonnées de la forme <span class="math">(x ; f(x))</span>.</p>
+          <p style="margin-top:8px">L'équation de la courbe s'écrit <span class="math">y = f(x)</span>.</p>
+        </div>
+      </div>
+
+      <!-- Exemple 5 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 5</div>
+          <h4>Tableau de valeurs et représentation de f(x) = 5x − x²</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <table class="val-table">
+            <thead>
+              <tr><th>x</th><th>1</th><th>1,5</th><th>2</th><th>2,5</th><th>3</th><th>3,5</th><th>4</th><th>4,5</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>f(x)</strong></td><td>4</td><td>5,25</td><td>6</td><td class="highlight" style="background:#fff0ef;color:var(--accent);font-weight:700;">6,25</td><td>6</td><td>5,25</td><td>4</td><td>2,25</td></tr>
+            </tbody>
+          </table>
+          <div class="tip-box" style="margin-top:16px">
+            <div class="tip-icon">📍</div>
+            <div class="tip-content">
+              <div class="tip-title">Lecture du tableau</div>
+              <p>La valeur maximale est atteinte pour <span class="math-inline">x = 2,5</span> avec <span class="math-inline">f(2,5) = 6,25</span>. La courbe est en forme de cloche (parabole inversée).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAPHIQUE DYNAMIQUE -->
+      <div class="graph-container">
+        <div class="graph-header">
+          <h4>📊 Graphique interactif — f(x) = 5x − x²</h4>
+          <div class="graph-controls">
+            <button class="btn-graph active" onclick="switchFunc(this, 'parabole')">f(x) = 5x−x²</button>
+            <button class="btn-graph" onclick="switchFunc(this, 'affine')">g(x) = 2x−3</button>
+            <button class="btn-graph" onclick="switchFunc(this, 'carre')">h(x) = x²−2</button>
+          </div>
+        </div>
+        <canvas id="graphCanvas" width="700" height="300"></canvas>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-icon">🖱️</div>
+        <div class="tip-content">
+          <div class="tip-title">Astuce graphique</div>
+          <p>Utilisez les boutons ci-dessus pour afficher différentes fonctions et observer la forme de leurs courbes. Passez votre souris sur le graphique pour lire les coordonnées.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-sep">
+
+    <!-- ═══ SECTION III ═══ -->
+    <section id="section-III" class="course-section">
+      <div class="section-header">
+        <div class="section-number">III</div>
+        <div class="section-title-wrap">
+          <h2>Résolution Graphique</h2>
+          <p>Équations et inéquations par lecture graphique</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="color:var(--blue)">📋 Méthode générale</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:linear-gradient(135deg,#eaf4fd,#f8fbff);border:1.5px solid var(--blue);border-radius:12px;padding:18px;">
+            <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:0.88rem;text-transform:uppercase;letter-spacing:0.08em;">⚖️ Résoudre f(x) = k</div>
+            <p style="font-size:0.9rem;">On trace la droite horizontale <span class="math-inline">y = k</span>, puis on lit les <strong>abscisses</strong> des points d'intersection avec la courbe.</p>
+          </div>
+          <div style="background:linear-gradient(135deg,#e8f8f0,#f0fff6);border:1.5px solid var(--green-light);border-radius:12px;padding:18px;">
+            <div style="font-weight:700;color:var(--green);margin-bottom:8px;font-size:0.88rem;text-transform:uppercase;letter-spacing:0.08em;">📏 Résoudre f(x) &gt; k</div>
+            <p style="font-size:0.9rem;">On lit les <strong>intervalles d'abscisses</strong> pour lesquels la courbe est <em>au-dessus</em> de la droite <span class="math-inline">y = k</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemple 6 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 6</div>
+          <h4>Résoudre graphiquement 5x − x² = 4</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <div class="example-question">
+            Avec la courbe de <span class="math-inline">f(x) = 5x − x²</span>, résoudre l'équation <span class="math-inline">5x − x² = 4</span>.
+          </div>
+          <div class="correction-wrap">
+            <button class="btn-show-correction" onclick="showCorrection(this)">🔍 Voir la correction</button>
+            <div class="correction-content">
+              <div class="correction-title">✅ Méthode</div>
+              <div class="math-block">
+                5x − x² = 4 &nbsp;⟺&nbsp; f(x) = 4
+                On cherche les antécédents de 4
+                On lit sur le graphique : <span class="math-result">x = 1 &nbsp;ou&nbsp; x = 4</span>
+              </div>
+              <p style="margin-top:12px;">Ensemble solution : <span class="math-inline">S = {1 ; 4}</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemple 7 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 7</div>
+          <h4>Résoudre graphiquement 5x − x² > 4</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <div class="example-question">
+            Résoudre graphiquement l'inéquation <span class="math-inline">5x − x² > 4</span>.
+          </div>
+          <div class="correction-wrap">
+            <button class="btn-show-correction" onclick="showCorrection(this)">🔍 Voir la correction</button>
+            <div class="correction-content">
+              <div class="correction-title">✅ Méthode</div>
+              <div class="math-block">
+                5x − x² &gt; 4 &nbsp;⟺&nbsp; f(x) &gt; 4
+                On cherche où la courbe est <strong>au-dessus</strong> de y = 4
+                <span class="math-result">x ∈ ]1 ; 4[</span>
+              </div>
+              <p style="margin-top:12px;">Ensemble solution : <span class="math-inline">S = ]1 ; 4[</span></p>
+              <div class="tip-box" style="margin-top:12px;">
+                <div class="tip-icon">💡</div>
+                <div class="tip-content">
+                  <div class="tip-title">Rappel intervalles</div>
+                  <p>On utilise des crochets ouverts <span class="math-inline">]</span> car l'inégalité est <strong>stricte</strong> (>). Si c'était ≥, on utiliserait des crochets fermés <span class="math-inline">[</span>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remarques -->
+      <div class="card">
+        <div class="card-title" style="color:var(--gray)">⚠️ Limites de la lecture graphique</div>
+        <div class="warning-box">
+          <div class="tip-icon">📌</div>
+          <div class="tip-content">
+            <div class="tip-title">Points importants</div>
+            <p>• Les solutions lues graphiquement sont des <strong>valeurs approchées</strong>.</p>
+            <p style="margin-top:6px">• Il pourrait exister des solutions <strong>au-delà de la fenêtre</strong> représentée.</p>
+            <p style="margin-top:6px">• Si la droite y = k ne coupe pas la courbe, l'équation n'a <strong>pas de solution</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ III -->
+      <div class="quiz-section" id="quiz2">
+        <div class="quiz-title">✅ Quiz — Résolution graphique</div>
+        <div class="quiz-question">Que recherche-t-on graphiquement quand on résout f(x) = k ?</div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz2', false)">
+            <div class="opt-letter">A</div> Les ordonnées des points sur la courbe
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz2', true)">
+            <div class="opt-letter">B</div> Les abscisses des points d'intersection avec y = k
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz2', false)">
+            <div class="opt-letter">C</div> La pente de la courbe en ce point
+          </div>
+        </div>
+        <div class="quiz-feedback" id="quiz2-feedback"></div>
+      </div>
+    </section>
+
+    <hr class="section-sep">
+
+    <!-- ═══ SECTION IV ═══ -->
+    <section id="section-IV" class="course-section">
+      <div class="section-header">
+        <div class="section-number">IV</div>
+        <div class="section-title-wrap">
+          <h2>Variations d'une Fonction</h2>
+          <p>Taux de variation · Monotonie · Croissance</p>
+        </div>
+      </div>
+
+      <!-- 1. Taux de variation -->
+      <div class="card">
+        <div class="card-title" style="color:var(--accent)">📈 1) Taux de variation</div>
+
+        <div class="def-box">
+          <div class="def-label">Définition</div>
+          <p>Le <strong>taux de variation</strong> de la fonction <span class="math">f</span> entre <span class="math">a</span> et <span class="math">b</span> est :</p>
+          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:1.4rem;color:var(--gold-light);padding:16px;border-top:1px solid rgba(255,255,255,0.1);margin-top:12px;">
+            τ = [f(b) − f(a)] / (b − a)
+          </div>
+        </div>
+
+        <div class="prop-box">
+          <div class="prop-label">📐 Propriété géométrique</div>
+          <p>Le taux de variation de <span class="math-inline">f</span> entre <span class="math-inline">a</span> et <span class="math-inline">b</span> est la <strong>pente (coefficient directeur) de la droite</strong> passant par les points d'abscisses <span class="math-inline">a</span> et <span class="math-inline">b</span> sur la courbe de <span class="math-inline">f</span>.</p>
+        </div>
+      </div>
+
+      <!-- Exemple 8 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 8</div>
+          <h4>Calculer et interpréter un taux de variation</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <div class="example-question">
+            Soit <span class="math-inline">f(x) = 2x² + 1</span>. Calculer le taux de variation entre 1 et 3, et interpréter géométriquement.
+          </div>
+          <div class="correction-wrap">
+            <button class="btn-show-correction" onclick="showCorrection(this)">🔍 Voir la correction</button>
+            <div class="correction-content">
+              <div class="correction-title">✅ Correction</div>
+              <p style="margin-bottom:10px;font-size:0.9rem;">a) On calcule f(3) et f(1) :</p>
+              <div class="math-block">
+                f(1) = 2×1² + 1 = <span class="math-result">3</span>
+                f(3) = 2×3² + 1 = 18 + 1 = <span class="math-result">19</span>
+                
+                τ = [f(3) − f(1)] / (3 − 1) = (19 − 3) / 2 = 16/2 = <span class="math-result">8</span>
+              </div>
+              <p style="margin-top:12px;font-size:0.9rem;">b) Le taux de variation est <strong>8</strong>, donc la droite passant par les points d'abscisses 1 et 3 a une <strong>pente de 8</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WIDGET TAUX DE VARIATION -->
+      <div class="taux-widget">
+        <div class="taux-title">⚡ Calculateur de Taux de Variation</div>
+        <p style="font-size:0.88rem;color:var(--gray);margin-bottom:16px;">Pour <span class="math-inline">f(x) = 2x² + 1</span></p>
+        <div class="taux-inputs">
+          <div>
+            <label>Valeur a</label>
+            <input type="number" id="tauxA" value="1" step="0.5">
+          </div>
+          <div>
+            <label>Valeur b</label>
+            <input type="number" id="tauxB" value="3" step="0.5">
+          </div>
+          <div>
+            <label>Coeff. de x²</label>
+            <input type="number" id="tauxCoeff" value="2" step="0.5">
+          </div>
+        </div>
+        <button class="btn-taux" onclick="calculerTaux()">📐 Calculer le taux de variation</button>
+        <div class="taux-result" id="tauxResult">
+          <div class="formula-display" id="tauxFormula"></div>
+          <div id="tauxSign"></div>
+        </div>
+      </div>
+
+      <!-- 2. Fonctions monotones -->
+      <div class="card">
+        <div class="card-title" style="color:var(--purple)">📊 2) Fonctions Monotones</div>
+
+        <div class="def-box">
+          <div class="def-label">Définition</div>
+          <p>Une fonction <span class="math">f</span> est <strong>monotone</strong> sur un intervalle I si elle est croissante, décroissante ou constante sur tout I.</p>
+        </div>
+
+        <div class="mono-cards">
+          <div class="mono-card croissante">
+            <div class="mc-icon">📈</div>
+            <div class="mc-label">Croissante</div>
+            <p>Le taux de variation est <strong>positif</strong> pour tous a, b de I.</p>
+          </div>
+          <div class="mono-card decroissante">
+            <div class="mc-icon">📉</div>
+            <div class="mc-label">Décroissante</div>
+            <p>Le taux de variation est <strong>négatif</strong> pour tous a, b de I.</p>
+          </div>
+          <div class="mono-card constante">
+            <div class="mc-icon">➡️</div>
+            <div class="mc-label">Constante</div>
+            <p>Le taux de variation est <strong>nul</strong> pour tous a, b de I.</p>
+          </div>
+        </div>
+
+        <div class="prop-box" style="margin-top:16px;">
+          <div class="prop-label">📋 Propriétés</div>
+          <p>• Taux de variation <strong>&gt; 0</strong> sur I ⟹ <span style="color:var(--green);font-weight:600;">f est strictement croissante</span> sur I</p>
+          <p style="margin-top:6px">• Taux de variation <strong>&lt; 0</strong> sur I ⟹ <span style="color:var(--accent);font-weight:600;">f est strictement décroissante</span> sur I</p>
+          <p style="margin-top:6px">• Taux de variation <strong>= 0</strong> sur I ⟹ <span style="color:var(--gray);font-weight:600;">f est constante</span> sur I</p>
+        </div>
+      </div>
+
+      <!-- Exemple 9 -->
+      <div class="example-block">
+        <div class="example-header" onclick="toggleExample(this)">
+          <div class="example-badge">Exemple 9</div>
+          <h4>Démontrer que f(x) = 5x − 3 est strictement croissante</h4>
+          <div class="example-toggle">▼</div>
+        </div>
+        <div class="example-body">
+          <div class="example-question">
+            Soit <span class="math-inline">f(x) = 5x − 3</span>. Démontrer que <span class="math-inline">f</span> est strictement croissante sur ℝ.
+          </div>
+          <div class="correction-wrap">
+            <button class="btn-show-correction" onclick="showCorrection(this)">🔍 Voir la correction</button>
+            <div class="correction-content">
+              <div class="correction-title">✅ Démonstration</div>
+              <p style="margin-bottom:10px;font-size:0.9rem;">On considère deux réels <strong>quelconques</strong> <span class="math-inline">a</span> et <span class="math-inline">b</span> :</p>
+              <div class="math-block">
+                τ = [f(b) − f(a)] / (b − a)
+                  = [(5b−3) − (5a−3)] / (b − a)
+                  = [5b − 5a] / (b − a)
+                  = 5(b − a) / (b − a)
+                  = <span class="math-result">5</span>
+              </div>
+              <p style="margin-top:12px;font-size:0.9rem;">Or <strong>5 &gt; 0</strong>, donc le taux de variation est toujours positif ⟹ <span class="math-inline">f</span> est <strong>strictement croissante</strong> sur ℝ. ∎</p>
+              <div class="tip-box" style="margin-top:12px;">
+                <div class="tip-icon">💡</div>
+                <div class="tip-content">
+                  <div class="tip-title">Méthode à retenir</div>
+                  <p>Pour une fonction affine <span class="math-inline">f(x) = ax + b</span>, le taux de variation entre deux points quelconques vaut toujours <span class="math-inline">a</span>. Le signe de <span class="math-inline">a</span> détermine la monotonie !</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ FINAL -->
+      <div class="quiz-section" id="quiz3">
+        <div class="quiz-title">✅ Quiz final — Variations</div>
+        <div class="quiz-question">Pour f(x) = 2x + 7, quel est le taux de variation entre deux réels quelconques a et b ?</div>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz3', false)">
+            <div class="opt-letter">A</div> 7
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz3', true)">
+            <div class="opt-letter">B</div> 2
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz3', false)">
+            <div class="opt-letter">C</div> 2a + 7
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, 'quiz3', false)">
+            <div class="opt-letter">D</div> b − a
+          </div>
+        </div>
+        <div class="quiz-feedback" id="quiz3-feedback"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- PROGRESS -->
+    <div class="sidebar-card">
+      <h3>📚 Progression</h3>
+      <div class="progress-items">
+        <div class="progress-item">
+          <div class="progress-dot done" id="dot-I"></div>
+          <span style="font-size:0.82rem;">I. Définitions et notations</span>
+        </div>
+        <div class="progress-item">
+          <div class="progress-dot" id="dot-II"></div>
+          <span style="font-size:0.82rem;">II. Représentation graphique</span>
+        </div>
+        <div class="progress-item">
+          <div class="progress-dot" id="dot-III"></div>
+          <span style="font-size:0.82rem;">III. Équations & inéquations</span>
+        </div>
+        <div class="progress-item">
+          <div class="progress-dot" id="dot-IV"></div>
+          <span style="font-size:0.82rem;">IV. Variations</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULAIRE -->
+    <div class="sidebar-card">
+      <h3>📋 Aide-mémoire</h3>
+      <div class="formulary">
+        <div class="formula-item">
+          <div class="fl">Image</div>
+          <div class="fv">f(a) = valeur en a</div>
+        </div>
+        <div class="formula-item">
+          <div class="fl">Antécédent de k</div>
+          <div class="fv">Résoudre f(x) = k</div>
+        </div>
+        <div class="formula-item">
+          <div class="fl">Taux de variation</div>
+          <div class="fv">[f(b)−f(a)] / (b−a)</div>
+        </div>
+        <div class="formula-item">
+          <div class="fl">Croissante si</div>
+          <div class="fv">taux &gt; 0</div>
+        </div>
+        <div class="formula-item">
+          <div class="fl">Décroissante si</div>
+          <div class="fv">taux &lt; 0</div>
+        </div>
+        <div class="formula-item">
+          <div class="fl">Courbe d'équation</div>
+          <div class="fv">y = f(x)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOTS CLÉS -->
+    <div class="sidebar-card">
+      <h3>🔑 Vocabulaire clé</h3>
+      <div class="key-word-list">
+        <div class="kw">Fonction</div>
+        <div class="kw">Image</div>
+        <div class="kw">Antécédent</div>
+        <div class="kw">Abscisse</div>
+        <div class="kw">Ordonnée</div>
+        <div class="kw">Courbe</div>
+        <div class="kw">Taux de variation</div>
+        <div class="kw">Monotonie</div>
+        <div class="kw">Croissante</div>
+        <div class="kw">Décroissante</div>
+        <div class="kw">Pente</div>
+        <div class="kw">Intervalle</div>
+      </div>
+    </div>
+
+    <!-- SCORE -->
+    <div class="sidebar-card">
+      <h3>🏆 Score Quiz</h3>
+      <div style="text-align:center;padding:12px 0;">
+        <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--ink);" id="score-display">0 / 3</div>
+        <div style="font-size:0.82rem;color:var(--gray);margin-top:4px;">questions correctes</div>
+        <div style="margin-top:16px;background:var(--warm-white);border-radius:10px;height:8px;overflow:hidden;">
+          <div id="score-bar" style="height:8px;background:linear-gradient(90deg,var(--green),var(--gold));width:0%;transition:width 0.5s ease;border-radius:10px;"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Cours de Mathématiques · Classe <strong>1STI2D</strong> · Généralités sur les Fonctions</p>
+  <p style="margin-top:6px;font-size:0.75rem;">Utilisez les exemples interactifs, les calculateurs et les quiz pour renforcer votre compréhension ✦</p>
+</footer>
+
+<!-- SCROLL TO TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ══════════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════════
+function scrollTo(id) {
+  document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+// Progress bar on scroll
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  // Scroll to top button
+  const st = document.getElementById('scrollTop');
+  window.scrollY > 300 ? st.classList.add('visible') : st.classList.remove('visible');
+
+  // Update sidebar dots
+  const sections = ['section-I','section-II','section-III','section-IV'];
+  const keys = ['I','II','III','IV'];
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const dot = document.getElementById('dot-'+keys[i]);
+      if (dot) {
+        if (rect.top < window.innerHeight * 0.5) {
+          dot.className = 'progress-dot done';
+        }
+      }
+    }
+  });
+});
+
+// ══════════════════════════════════════════════
+// NOTIFICATION
+// ══════════════════════════════════════════════
+function showNotify(msg, delay = 2200) {
+  const n = document.getElementById('notify');
+  n.textContent = msg;
+  n.style.display = 'block';
+  setTimeout(() => { n.style.display = 'none'; }, delay);
+}
+
+// ══════════════════════════════════════════════
+// EXAMPLE TOGGLE
+// ══════════════════════════════════════════════
+function toggleExample(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.example-toggle');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  toggle.classList.toggle('open', !isOpen);
+}
+
+// ══════════════════════════════════════════════
+// CORRECTION TOGGLE
+// ══════════════════════════════════════════════
+function showCorrection(btn) {
+  const wrap = btn.parentElement;
+  const content = wrap.querySelector('.correction-content');
+  const isVisible = content.classList.contains('visible');
+  content.classList.toggle('visible');
+  btn.innerHTML = isVisible ? '🔍 Voir la correction' : '👁️ Masquer la correction';
+  if (!isVisible) showNotify('✅ Correction affichée !');
+}
+
+// ══════════════════════════════════════════════
+// CALCULATEUR IMAGE
+// ══════════════════════════════════════════════
+function calculateImage() {
+  const type = document.getElementById('funcType').value;
+  const a = parseFloat(document.getElementById('paramA').value) || 1;
+  const b = parseFloat(document.getElementById('paramB').value) || 0;
+  const x = parseFloat(document.getElementById('calcX').value) || 0;
+
+  let expr, val, funcName;
+  if (type === 'custom') {
+    val = x*x - 2;
+    expr = `g(x) = x² − 2`;
+    funcName = `g(${x})`;
+  } else if (type === 'linear') {
+    val = a * x + b;
+    const bStr = b >= 0 ? `+ ${b}` : `− ${Math.abs(b)}`;
+    expr = `f(x) = ${a}x ${bStr}`;
+    funcName = `f(${x})`;
+  } else {
+    val = x*x + b*x + a;
+    const bStr = b >= 0 ? `+ ${b}x` : `− ${Math.abs(b)}x`;
+    expr = `f(x) = x² ${bStr} + ${a}`;
+    funcName = `f(${x})`;
+  }
+
+  const result = document.getElementById('calcResult');
+  result.classList.add('visible');
+  result.innerHTML = `
+    <div style="color:var(--gray);font-size:0.78rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em;">Résultat</div>
+    <div>${expr}</div>
+    <div style="color:var(--gray-light);margin:4px 0;">Substitution : x = ${x}</div>
+    <div style="color:var(--gold-light);font-size:1.2rem;font-weight:700;margin-top:8px;">${funcName} = ${val}</div>
+    <div style="color:var(--gray-light);font-size:0.78rem;margin-top:8px;">L'image de ${x} par la fonction est <strong style="color:var(--gold-light)">${val}</strong></div>
+  `;
+  showNotify(`Image calculée : ${funcName} = ${val} ✨`);
+}
+
+// ══════════════════════════════════════════════
+// TAUX DE VARIATION
+// ══════════════════════════════════════════════
+function calculerTaux() {
+  const a = parseFloat(document.getElementById('tauxA').value);
+  const b = parseFloat(document.getElementById('tauxB').value);
+  const c = parseFloat(document.getElementById('tauxCoeff').value);
+
+  if (a === b) {
+    showNotify('⚠️ a et b doivent être différents !');
+    return;
+  }
+
+  const fa = c * a * a + 1;
+  const fb = c * b * b + 1;
+  const taux = (fb - fa) / (b - a);
+  const tausFrac = (fb - fa) + ' / ' + (b - a);
+
+  const resultEl = document.getElementById('tauxResult');
+  const formulaEl = document.getElementById('tauxFormula');
+  const signEl = document.getElementById('tauxSign');
+
+  resultEl.classList.add('visible');
+  formulaEl.innerHTML = `
+f(${a}) = ${c}×${a}² + 1 = ${fa}
+f(${b}) = ${c}×${b}² + 1 = ${fb}
+
+τ = [f(${b}) − f(${a})] / (${b} − ${a})
+  = (${fb} − ${fa}) / ${b - a}
+  = ${fb - fa} / ${b - a}
+  = ${taux.toFixed(4).replace(/\.?0+$/, '')}
+  `;
+
+  let signClass, signText;
+  if (taux > 0) {
+    signClass = 'pos';
+    signText = `📈 Taux positif (${taux.toFixed(2)}) → f est croissante sur cet intervalle`;
+  } else if (taux < 0) {
+    signClass = 'neg';
+    signText = `📉 Taux négatif (${taux.toFixed(2)}) → f est décroissante sur cet intervalle`;
+  } else {
+    signClass = 'zero';
+    signText = `➡️ Taux nul (0) → f est constante sur cet intervalle`;
+  }
+  signEl.innerHTML = `<div class="taux-sign ${signClass}">${signText}</div>`;
+  showNotify(`Taux de variation = ${taux.toFixed(2)} 📐`);
+}
+
+// ══════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════
+let scores = 0;
+const maxScore = 3;
+const answered = {};
+
+function checkAnswer(opt, quizId, isCorrect) {
+  if (answered[quizId]) return;
+  answered[quizId] = true;
+
+  const allOpts = opt.parentElement.querySelectorAll('.quiz-opt');
+  allOpts.forEach(o => { o.style.pointerEvents = 'none'; });
+
+  const feedback = document.getElementById(quizId + '-feedback');
+  if (isCorrect) {
+    opt.classList.add('correct');
+    feedback.className = 'quiz-feedback success';
+    feedback.innerHTML = '🎉 Bravo ! C\'est la bonne réponse !';
+    scores++;
+    updateScore();
+    showNotify('✅ Bonne réponse ! +1 point');
+  } else {
+    opt.classList.add('wrong');
+    feedback.className = 'quiz-feedback error';
+    feedback.innerHTML = '❌ Ce n\'est pas la bonne réponse. Lis bien la correction dans le cours !';
+    // Show correct
+    allOpts.forEach(o => {
+      if (o.getAttribute('onclick').includes('true')) {
+        o.classList.add('correct');
+      }
+    });
+    showNotify('❌ Mauvaise réponse, lis le cours !');
+  }
+
+  const nextBtn = document.getElementById(quizId + '-next');
+  if (nextBtn) nextBtn.classList.add('visible');
+}
+
+function updateScore() {
+  document.getElementById('score-display').textContent = scores + ' / ' + maxScore;
+  document.getElementById('score-bar').style.width = (scores / maxScore * 100) + '%';
+}
+
+function nextQuiz() {
+  document.getElementById('section-III').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════
+// GRAPH
+// ══════════════════════════════════════════════
+let currentFunc = 'parabole';
+
+function switchFunc(btn, func) {
+  currentFunc = func;
+  document.querySelectorAll('.btn-graph').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawGraph();
+  showNotify('📊 Graphique mis à jour');
+}
+
+function drawGraph() {
+  const canvas = document.getElementById('graphCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#fefcf8';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid & axes
+  const ox = 60, oy = H - 50;
+  const sx = 50, sy = 35;
+
+  // Grid
+  ctx.strokeStyle = '#e8e0d8';
+  ctx.lineWidth = 1;
+  for (let xi = -1; xi <= 12; xi++) {
+    ctx.beginPath();
+    ctx.moveTo(ox + xi * sx, 10);
+    ctx.lineTo(ox + xi * sx, H - 20);
+    ctx.stroke();
+  }
+  for (let yi = -3; yi <= 8; yi++) {
+    ctx.beginPath();
+    ctx.moveTo(20, oy - yi * sy);
+    ctx.lineTo(W - 10, oy - yi * sy);
+    ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#1a1412';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(20, oy); ctx.lineTo(W - 10, oy);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(ox, 10); ctx.lineTo(ox, H - 20);
+  ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#7f8c8d';
+  ctx.font = '11px JetBrains Mono, monospace';
+  for (let xi = 0; xi <= 10; xi++) {
+    if (xi === 0) continue;
+    ctx.fillText(xi, ox + xi * sx - 4, oy + 15);
+  }
+  for (let yi = 1; yi <= 7; yi++) {
+    ctx.fillText(yi, ox - 20, oy - yi * sy + 4);
+  }
+
+  // Axis labels x, y
+  ctx.fillStyle = '#1a1412';
+  ctx.font = 'italic 14px Playfair Display, serif';
+  ctx.fillText('x', W - 16, oy - 6);
+  ctx.fillText('y', ox + 8, 20);
+
+  // Functions
+  ctx.lineWidth = 3;
+  ctx.lineJoin = 'round';
+
+  let fn, color, label;
+  if (currentFunc === 'parabole') {
+    fn = x => 5*x - x*x;
+    color = '#c0392b';
+    label = 'f(x) = 5x − x²';
+  } else if (currentFunc === 'affine') {
+    fn = x => 2*x - 3;
+    color = '#2471a3';
+    label = 'g(x) = 2x − 3';
+  } else {
+    fn = x => x*x - 2;
+    color = '#1e8449';
+    label = 'h(x) = x² − 2';
+  }
+
+  // Draw function
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  let first = true;
+  for (let px = 20; px < W - 10; px++) {
+    const x = (px - ox) / sx;
+    const y = fn(x);
+    const py = oy - y * sy;
+    if (py < 5 || py > H - 5) { first = true; continue; }
+    if (first) { ctx.moveTo(px, py); first = false; }
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Points
+  const pts = currentFunc === 'parabole' ? [1,1.5,2,2.5,3,3.5,4,4.5] :
+              currentFunc === 'affine' ? [0,1,2,3,4,5] : [0,1,2,3,4];
+  pts.forEach(xv => {
+    const yv = fn(xv);
+    const px = ox + xv * sx;
+    const py = oy - yv * sy;
+    if (py < 5 || py > H - 5) return;
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+
+  // Label
+  ctx.fillStyle = color;
+  ctx.font = 'bold 13px DM Sans, sans-serif';
+  ctx.fillText(label, ox + 6, 35);
+}
+
+// Mouse interaction on graph
+const canvas = document.getElementById('graphCanvas');
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const px = (e.clientX - rect.left) * scaleX;
+  const ox = 60, oy = canvas.height - 50, sx = 50, sy = 35;
+  const x = (px - ox) / sx;
+  if (x < 0 || x > 10) return;
+
+  let fn;
+  if (currentFunc === 'parabole') fn = x => 5*x - x*x;
+  else if (currentFunc === 'affine') fn = x => 2*x - 3;
+  else fn = x => x*x - 2;
+
+  const y = fn(x);
+  const py = oy - y * sy;
+  if (py < 10 || py > canvas.height - 20) return;
+
+  drawGraph();
+  const ctx = canvas.getContext('2d');
+  // Tooltip
+  ctx.strokeStyle = 'rgba(192,57,43,0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(ox + x*sx, oy); ctx.lineTo(ox + x*sx, py); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, py); ctx.lineTo(ox + x*sx, py); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.beginPath();
+  ctx.arc(ox + x*sx, py, 6, 0, Math.PI*2);
+  ctx.fillStyle = '#c0392b';
+  ctx.fill();
+
+  const label = `(${x.toFixed(2)} ; ${y.toFixed(2)})`;
+  const tx = ox + x*sx + 10;
+  const ty = py - 10;
+  ctx.fillStyle = '#1a1412';
+  ctx.font = 'bold 12px JetBrains Mono, monospace';
+  const w = ctx.measureText(label).width + 16;
+  ctx.fillStyle = 'rgba(26,20,18,0.85)';
+  ctx.beginPath();
+  ctx.roundRect(tx - 4, ty - 16, w, 22, 5);
+  ctx.fill();
+  ctx.fillStyle = '#f0c860';
+  ctx.fillText(label, tx + 4, ty);
+});
+
+canvas.addEventListener('mouseleave', drawGraph);
+
+// Init
+window.addEventListener('load', () => {
+  drawGraph();
+});
+</script>
+</body>
+</html>

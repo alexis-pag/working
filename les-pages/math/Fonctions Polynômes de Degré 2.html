@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonctions Polynômes de Degré 2 - Cours Interactif</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2d3561;
+            --secondary: #c05c7e;
+            --accent: #f3826f;
+            --light: #f7f5fb;
+            --dark: #1a1a2e;
+            --success: #4caf50;
+            --warning: #ff9800;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        nav {
+            background: var(--light);
+            padding: 1.5rem 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .nav-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 53, 97, 0.3);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        main {
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 4px solid var(--accent);
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+        }
+
+        .definition-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 6px solid var(--primary);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .example-box {
+            background: #fff9e6;
+            border-left: 6px solid var(--warning);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+        }
+
+        .property-box {
+            background: #e8f5e9;
+            border-left: 6px solid var(--success);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+        }
+
+        .formula {
+            background: var(--dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .interactive-canvas {
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        input[type="range"] {
+            width: 200px;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--secondary);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--secondary);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: none;
+        }
+
+        .value-display {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(192, 92, 126, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 130, 111, 0.4);
+        }
+
+        .quiz-container {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            background: #e8f5e9;
+            border-color: var(--success);
+            animation: pulse 0.5s;
+        }
+
+        .quiz-option.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tips-box::before {
+            content: "💡 Astuce";
+            display: block;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.8rem; }
+            .controls { flex-direction: column; align-items: stretch; }
+            input[type="range"] { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fonctions Polynômes de Degré 2</h1>
+            <p class="subtitle">1STI2D - Cours Interactif</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showSection('intro')">📚 Introduction</button>
+            <button class="nav-btn" onclick="showSection('graphique')">📊 Représentation</button>
+            <button class="nav-btn" onclick="showSection('factorisee')">🔧 Forme Factorisée</button>
+            <button class="nav-btn" onclick="showSection('signe')">➕➖ Signe</button>
+            <button class="nav-btn" onclick="showSection('equations')">🎯 Équations</button>
+            <button class="nav-btn" onclick="showSection('quiz')">🎮 Quiz</button>
+        </nav>
+
+        <main>
+            <!-- SECTION INTRODUCTION -->
+            <section id="intro" class="section active">
+                <h2>I. Définition</h2>
+                
+                <div class="definition-box">
+                    <h3>Fonction polynôme de degré 2</h3>
+                    <p>On appelle <strong>fonction polynôme de degré 2</strong> toute fonction <em>f</em> définie sur ℝ par :</p>
+                    <div class="formula">f(x) = ax² + bx + c</div>
+                    <p>où les coefficients <em>a</em>, <em>b</em> et <em>c</em> sont des réels donnés avec <strong>a ≠ 0</strong>.</p>
+                </div>
+
+                <div class="tips-box">
+                    Cette année, nous étudions particulièrement les fonctions de la forme <strong>f(x) = ax²</strong> ou <strong>f(x) = ax² + b</strong>, avec a ≠ 0.
+                </div>
+
+                <h3>Exemples et contre-exemples</h3>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h4 style="color: var(--success);">✅ Fonctions du 2nd degré</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>• f(x) = 3x² - 7x + 3</li>
+                            <li>• g(x) = ½x² - 5x + ⅗</li>
+                            <li>• h(x) = 4 - 2x²</li>
+                            <li>• k(x) = (x - 4)(5 - 2x)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4 style="color: #f44336;">❌ Autres fonctions</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>• m(x) = 5x - 3 <br><small>(degré 1 - fonction affine)</small></li>
+                            <li>• n(x) = 5x⁴ - 7x³ + 3x - 8 <br><small>(degré 4)</small></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="property-box">
+                    <strong>Remarque :</strong> Une fonction polynôme du second degré s'appelle également un <strong>trinôme</strong>.
+                </div>
+            </section>
+
+            <!-- SECTION GRAPHIQUE -->
+            <section id="graphique" class="section">
+                <h2>II. Représentation Graphique</h2>
+
+                <div class="definition-box">
+                    <h3>La Parabole</h3>
+                    <p>La représentation graphique d'une fonction polynôme de degré 2 s'appelle une <strong>parabole</strong>.</p>
+                </div>
+
+                <div class="interactive-canvas">
+                    <h3>Explorateur de Paraboles <span class="emoji">🎨</span></h3>
+                    <canvas id="graphCanvas" width="700" height="500"></canvas>
+                    
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Coefficient a :</label>
+                            <input type="range" id="aSlider" min="-5" max="5" step="0.1" value="1">
+                            <span class="value-display" id="aValue">1</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Coefficient b :</label>
+                            <input type="range" id="bSlider" min="-10" max="10" step="0.5" value="0">
+                            <span class="value-display" id="bValue">0</span>
+                        </div>
+                        <button class="btn" onclick="resetGraph()">🔄 Réinitialiser</button>
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem; font-size: 1.2rem; font-weight: 600; color: var(--primary);">
+                        f(x) = <span id="formulaDisplay">x²</span>
+                    </div>
+                </div>
+
+                <div class="property-box">
+                    <h3>Propriétés importantes</h3>
+                    <p>Soit <em>f</em> une fonction polynôme du second degré, telle que f(x) = ax² + b.</p>
+                    <ul>
+                        <li><strong>Si a > 0 :</strong> la parabole est tournée vers le haut 😊 (f est d'abord décroissante, puis croissante)</li>
+                        <li><strong>Si a < 0 :</strong> la parabole est tournée vers le bas ☹️ (f est d'abord croissante, puis décroissante)</li>
+                        <li><strong>Axe de symétrie :</strong> L'axe des ordonnées (x = 0)</li>
+                        <li><strong>Sommet :</strong> Point de coordonnées (0 ; b)</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    Utilisez l'explorateur ci-dessus pour voir comment les coefficients <em>a</em> et <em>b</em> influencent la forme et la position de la parabole !
+                </div>
+            </section>
+
+            <!-- SECTION FORME FACTORISÉE -->
+            <section id="factorisee" class="section">
+                <h2>III. Forme Factorisée</h2>
+
+                <div class="definition-box">
+                    <h3>Forme factorisée</h3>
+                    <p>Les fonctions définies sur ℝ par <strong>f(x) = a(x - x₁)(x - x₂)</strong> sont des fonctions polynômes de degré 2.</p>
+                    <p>Les coefficients <em>a</em>, <em>x₁</em> et <em>x₂</em> sont des réels avec <strong>a ≠ 0</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <h3>Exemple</h3>
+                    <p>La fonction f définie par f(x) = 2(x - 2)(x + 2) est une fonction du second degré.</p>
+                    <p>En effet, elle s'écrit aussi sous la forme x ↦ ax² + b :</p>
+                    <div class="formula">f(x) = 2(x - 2)(x + 2) = 2(x² - 4) = 2x² - 8</div>
+                </div>
+
+                <div class="property-box">
+                    <h3>Racines de la fonction</h3>
+                    <p>Soit la fonction <em>f</em> définie sur ℝ par f(x) = a(x - x₁)(x - x₂).</p>
+                    <p>L'équation <strong>f(x) = 0</strong> possède deux solutions (éventuellement égales) :</p>
+                    <div class="formula">x = x₁ et x = x₂</div>
+                    <p>Ces solutions sont appelées les <strong>racines</strong> de la fonction polynôme f.</p>
+                </div>
+
+                <div class="property-box">
+                    <h3>Axe de symétrie</h3>
+                    <p>La droite d'équation <strong>x = p</strong> avec :</p>
+                    <div class="formula">p = (x₁ + x₂) / 2</div>
+                    <p>est l'axe de symétrie de la parabole représentant la fonction f.</p>
+                </div>
+
+                <div class="tips-box">
+                    Pour trouver les racines d'une fonction factorisée, cherchez les valeurs de <em>x</em> qui annulent chaque facteur !
+                </div>
+            </section>
+
+            <!-- SECTION SIGNE -->
+            <section id="signe" class="section">
+                <h2>IV. Signe d'une Fonction Polynôme</h2>
+
+                <div class="example-box">
+                    <h3>Exemple : Tableau de signes</h3>
+                    <p>Étudions le signe de f(x) = -2(x - 3)(x + 2)</p>
+                    
+                    <div style="overflow-x: auto; margin: 1.5rem 0;">
+                        <table style="width: 100%; border-collapse: collapse; background: white;">
+                            <tr style="background: var(--primary); color: white;">
+                                <th style="border: 2px solid var(--primary); padding: 1rem;">x</th>
+                                <th style="border: 2px solid var(--primary); padding: 1rem;">-∞</th>
+                                <th style="border: 2px solid var(--primary); padding: 1rem;">-2</th>
+                                <th style="border: 2px solid var(--primary); padding: 1rem;">3</th>
+                                <th style="border: 2px solid var(--primary); padding: 1rem;">+∞</th>
+                            </tr>
+                            <tr>
+                                <td style="border: 2px solid #ddd; padding: 1rem; font-weight: 600;">-2</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 2px solid #ddd; padding: 1rem; font-weight: 600;">x - 3</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">0</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">+</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 2px solid #ddd; padding: 1rem; font-weight: 600;">x + 2</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">0</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">+</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center;">+</td>
+                            </tr>
+                            <tr style="background: var(--light);">
+                                <td style="border: 2px solid #ddd; padding: 1rem; font-weight: 700;">-2(x-3)(x+2)</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center; font-weight: 700;">-</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center; font-weight: 700;">0</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center; font-weight: 700;">+</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center; font-weight: 700;">0</td>
+                                <td style="border: 2px solid #ddd; padding: 1rem; text-align: center; font-weight: 700;">-</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="property-box">
+                        <strong>Conclusion :</strong>
+                        <ul>
+                            <li>f(x) ≥ 0 pour x ∈ [-2 ; 3]</li>
+                            <li>f(x) ≤ 0 pour x ∈ ]-∞ ; -2] ∪ [3 ; +∞[</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    Pour étudier le signe d'un produit, étudiez le signe de chaque facteur séparément, puis appliquez la règle des signes !
+                </div>
+            </section>
+
+            <!-- SECTION ÉQUATIONS -->
+            <section id="equations" class="section">
+                <h2>V. Équations de la forme x² = c</h2>
+
+                <div class="property-box">
+                    <h3>Résolution de x² = c</h3>
+                    <p>Les solutions dans ℝ de l'équation x² = c dépendent du signe de c :</p>
+                    <ul>
+                        <li><strong>Si c < 0 :</strong> l'équation n'a pas de solution</li>
+                        <li><strong>Si c = 0 :</strong> l'équation possède une unique solution qui est 0</li>
+                        <li><strong>Si c > 0 :</strong> l'équation possède deux solutions : √c et -√c</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h3>Exemples</h3>
+                    
+                    <div class="card">
+                        <h4>a) x² = 16</h4>
+                        <p>16 est positif donc l'équation admet deux solutions :</p>
+                        <div class="formula">x = √16 = 4 et x = -√16 = -4</div>
+                    </div>
+
+                    <div class="card">
+                        <h4>b) x² = -8</h4>
+                        <p>-8 est négatif donc l'équation n'a pas de solution dans ℝ.</p>
+                    </div>
+
+                    <div class="card">
+                        <h4>c) 2x² - 8 = 120</h4>
+                        <p>Résolution :</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>2x² = 120 + 8</li>
+                            <li>2x² = 128</li>
+                            <li>x² = 64</li>
+                        </ul>
+                        <div class="formula">x = √64 = 8 et x = -√64 = -8</div>
+                    </div>
+                </div>
+
+                <div class="interactive-canvas">
+                    <h3>Calculateur d'équations <span class="emoji">🧮</span></h3>
+                    <p>Résoudre l'équation : x² = <input type="number" id="cValue" value="25" style="width: 100px; padding: 0.5rem; border: 2px solid var(--primary); border-radius: 8px; font-size: 1rem;"></p>
+                    <button class="btn" onclick="solveEquation()">Résoudre</button>
+                    <div id="solutionDisplay" style="margin-top: 1.5rem; font-size: 1.1rem; min-height: 80px;"></div>
+                </div>
+            </section>
+
+            <!-- SECTION QUIZ -->
+            <section id="quiz" class="section">
+                <h2>VI. Quiz Interactif</h2>
+
+                <div class="quiz-container">
+                    <div class="quiz-question" id="quizQuestion">Question chargement...</div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <span style="font-weight: 600; color: var(--primary);">Score : <span id="score">0</span> / <span id="totalQuestions">0</span></span>
+                    </div>
+                    <button class="btn" onclick="nextQuestion()" style="margin-top: 1rem; display: none;" id="nextBtn">Question Suivante ➡️</button>
+                </div>
+
+                <div class="tips-box">
+                    Prenez votre temps pour réfléchir à chaque question. Les réponses vous aideront à mieux comprendre les concepts !
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Cours Interactif - Fonctions Polynômes de Degré 2 - 1STI2D</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">Bonne révision ! 📚✨</p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation entre sections
+        let visitedSections = new Set(['intro']);
+        
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            visitedSections.add(sectionId);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalSections = 6;
+            const progress = (visitedSections.size / totalSections) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Graphique interactif
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        const aSlider = document.getElementById('aSlider');
+        const bSlider = document.getElementById('bSlider');
+        const aValue = document.getElementById('aValue');
+        const bValue = document.getElementById('bValue');
+
+        function drawGraph() {
+            const a = parseFloat(aSlider.value);
+            const b = parseFloat(bSlider.value);
+            
+            aValue.textContent = a;
+            bValue.textContent = b;
+            
+            // Mise à jour de la formule
+            let formula = '';
+            if (a !== 0) {
+                formula += (a === 1 ? '' : a === -1 ? '-' : a) + 'x²';
+            }
+            if (b !== 0) {
+                formula += (b > 0 ? ' + ' : ' - ') + Math.abs(b);
+            }
+            if (formula === '') formula = '0';
+            document.getElementById('formulaDisplay').textContent = formula;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Configuration
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = 30;
+            
+            // Grille
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = -10; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(centerX + i * scale, 0);
+                ctx.lineTo(centerX + i * scale, canvas.height);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(0, centerY + i * scale);
+                ctx.lineTo(canvas.width, centerY + i * scale);
+                ctx.stroke();
+            }
+            
+            // Axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Work Sans';
+            ctx.fillText('x', canvas.width - 20, centerY - 10);
+            ctx.fillText('y', centerX + 10, 20);
+            ctx.fillText('0', centerX + 5, centerY + 20);
+            
+            // Parabole
+            ctx.strokeStyle = '#c05c7e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            let firstPoint = true;
+            for (let x = -canvas.width / 2; x <= canvas.width / 2; x += 1) {
+                const realX = x / scale;
+                const y = a * realX * realX + b;
+                const canvasX = centerX + x;
+                const canvasY = centerY - y * scale;
+                
+                if (canvasY >= 0 && canvasY <= canvas.height) {
+                    if (firstPoint) {
+                        ctx.moveTo(canvasX, canvasY);
+                        firstPoint = false;
+                    } else {
+                        ctx.lineTo(canvasX, canvasY);
+                    }
+                }
+            }
+            ctx.stroke();
+            
+            // Sommet
+            const sommetX = 0;
+            const sommetY = b;
+            const sommetCanvasX = centerX;
+            const sommetCanvasY = centerY - sommetY * scale;
+            
+            if (sommetCanvasY >= 0 && sommetCanvasY <= canvas.height) {
+                ctx.fillStyle = '#f3826f';
+                ctx.beginPath();
+                ctx.arc(sommetCanvasX, sommetCanvasY, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.fillStyle = '#2d3561';
+                ctx.font = 'bold 14px Work Sans';
+                ctx.fillText(`S(0; ${b})`, sommetCanvasX + 15, sommetCanvasY - 10);
+            }
+        }
+
+        function resetGraph() {
+            aSlider.value = 1;
+            bSlider.value = 0;
+            drawGraph();
+        }
+
+        aSlider.addEventListener('input', drawGraph);
+        bSlider.addEventListener('input', drawGraph);
+        
+        // Initialiser le graphique
+        if (canvas) {
+            drawGraph();
+        }
+
+        // Résolution d'équations
+        function solveEquation() {
+            const c = parseFloat(document.getElementById('cValue').value);
+            const display = document.getElementById('solutionDisplay');
+            
+            if (isNaN(c)) {
+                display.innerHTML = '<div style="color: #f44336;">Veuillez entrer un nombre valide.</div>';
+                return;
+            }
+            
+            let result = '<div style="background: var(--light); padding: 1.5rem; border-radius: 12px;">';
+            result += `<strong>Équation : x² = ${c}</strong><br><br>`;
+            
+            if (c < 0) {
+                result += '<div style="color: #f44336; font-weight: 600;">❌ Pas de solution dans ℝ</div>';
+                result += '<p style="margin-top: 0.5rem;">c < 0, donc l\'équation n\'a pas de solution réelle.</p>';
+            } else if (c === 0) {
+                result += '<div style="color: var(--success); font-weight: 600;">✅ Une solution unique</div>';
+                result += '<p style="margin-top: 0.5rem;">x = 0</p>';
+            } else {
+                const sol1 = Math.sqrt(c);
+                const sol2 = -Math.sqrt(c);
+                result += '<div style="color: var(--success); font-weight: 600;">✅ Deux solutions</div>';
+                result += `<p style="margin-top: 0.5rem;">x₁ = √${c} = ${sol1.toFixed(3)}</p>`;
+                result += `<p>x₂ = -√${c} = ${sol2.toFixed(3)}</p>`;
+            }
+            
+            result += '</div>';
+            display.innerHTML = result;
+        }
+
+        // Quiz
+        const quizQuestions = [
+            {
+                question: "Quelle est la représentation graphique d'une fonction polynôme de degré 2 ?",
+                options: ["Une droite", "Une parabole", "Une hyperbole", "Un cercle"],
+                correct: 1
+            },
+            {
+                question: "Si a > 0 dans f(x) = ax² + b, comment est orientée la parabole ?",
+                options: ["Vers le bas", "Vers le haut", "Horizontalement", "Cela dépend de b"],
+                correct: 1
+            },
+            {
+                question: "Combien de solutions a l'équation x² = -4 dans ℝ ?",
+                options: ["0", "1", "2", "Une infinité"],
+                correct: 0
+            },
+            {
+                question: "Quelles sont les racines de f(x) = 3(x - 2)(x + 5) ?",
+                options: ["2 et -5", "-2 et 5", "3 et 0", "2 et 5"],
+                correct: 0
+            },
+            {
+                question: "Quel est l'axe de symétrie de y = ax² + b ?",
+                options: ["x = a", "x = b", "x = 0", "y = 0"],
+                correct: 2
+            },
+            {
+                question: "Si f(x) = -2x² + 8, quel est le sommet de la parabole ?",
+                options: ["(0; -2)", "(0; 8)", "(8; 0)", "(2; 0)"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                const quizContainer = document.querySelector('.quiz-container');
+                quizContainer.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <h3 style="color: var(--success); font-size: 2.5rem; margin-bottom: 1rem;">🎉 Quiz Terminé ! 🎉</h3>
+                        <p style="font-size: 1.5rem; margin-bottom: 2rem;">Score final : ${score} / ${quizQuestions.length}</p>
+                        <p style="font-size: 1.2rem; color: var(--primary);">
+                            ${score === quizQuestions.length ? 'Parfait ! Vous maîtrisez le sujet ! 🌟' :
+                              score >= quizQuestions.length * 0.7 ? 'Très bien ! Continuez comme ça ! 👍' :
+                              'Pas mal ! Revoyez le cours pour progresser ! 📚'}
+                        </p>
+                        <button class="btn" onclick="resetQuiz()" style="margin-top: 2rem;">🔄 Recommencer</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('quizQuestion').textContent = `Question ${currentQuestion + 1}/${quizQuestions.length} : ${q.question}`;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'quiz-option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('totalQuestions').textContent = quizQuestions.length;
+            document.getElementById('nextBtn').style.display = 'none';
+            answered = false;
+        }
+
+        function checkAnswer(selected) {
+            if (answered) return;
+            answered = true;
+            
+            const q = quizQuestions[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            if (selected === q.correct) {
+                options[selected].classList.add('correct');
+                score++;
+                document.getElementById('score').textContent = score;
+            } else {
+                options[selected].classList.add('incorrect');
+                options[q.correct].classList.add('correct');
+            }
+            
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            const quizContainer = document.querySelector('.quiz-container');
+            quizContainer.innerHTML = `
+                <div class="quiz-question" id="quizQuestion">Question chargement...</div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <span style="font-weight: 600; color: var(--primary);">Score : <span id="score">0</span> / <span id="totalQuestions">0</span></span>
+                </div>
+                <button class="btn" onclick="nextQuestion()" style="margin-top: 1rem; display: none;" id="nextBtn">Question Suivante ➡️</button>
+            `;
+            loadQuestion();
+        }
+
+        // Initialiser le quiz au chargement
+        loadQuestion();
+    </script>
+</body>
+</html>
